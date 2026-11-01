@@ -1,0 +1,42 @@
+/* ==========================================================================
+   Layout
+   Page containers, section rhythm and shared grid utilities.
+   ========================================================================== */
+
+.container {
+  width: 100%;
+  max-width: 1300px;
+  margin-inline: auto;
+  padding-inline: 25px;
+}
+
+.container--narrow {
+  max-width: 1130px;
+}
+
+.section {
+  padding-block: var(--space-section) 0;
+}
+
+.grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.grid--3 {
+  grid-template-columns: 1fr;
+}
+
+.grid--products {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem 1rem;
+  margin-bottom: 3rem;
+}
+
+@media (min-width: 700px) {
+  .grid--3 { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (min-width: 800px) {
+  .grid--products { grid-template-columns: repeat(4, 1fr); gap: 2rem 1.5rem; }
+}

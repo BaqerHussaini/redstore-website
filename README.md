@@ -22,8 +22,14 @@ Then visit `http://localhost:8000` from the project directory.
 ```
 redstore-website/
 ├── index.html
+├── pages/                # page documents (products.html)
 ├── assets/
-│   ├── css/main.css      # tokens → base → layout → components → sections
+│   ├── css/
+│   │   ├── main.css         # imports the layer files below
+│   │   ├── base.css         # tokens, element defaults, utilities
+│   │   ├── layout.css       # containers, section rhythm, grids
+│   │   ├── components.css   # buttons, titles, ratings, cards, header, footer
+│   │   └── pages/           # page-specific styles (home.css, products.css)
 │   ├── js/main.js        # mobile menu toggle, footer year
 │   └── images/           # WebP photos; PNG logos, icons and badges
 │       ├── brands/  ├── categories/  ├── hero/  ├── icons/
