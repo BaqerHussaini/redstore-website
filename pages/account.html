@@ -94,7 +94,7 @@
                 <input id="register-password" name="password" type="password" placeholder="Password" autocomplete="new-password">
 
                 <button class="btn auth-form__submit" type="submit">Register</button>
-                <a class="auth-form__link" href="#">Already have an account?</a>
+                <a class="auth-form__link" id="show-login" href="#login-form">Already have an account?</a>
                 <p>By creating an account, you agree to RedStore's <a href="#">Conditions of Use</a> and <a href="#">Privacy Policy</a>.</p>
               </form>
             </div>
@@ -185,6 +185,12 @@
 
       Object.entries(views).forEach(([name, view]) => {
         view.tab.addEventListener('click', () => show(name));
+      });
+
+      const showLoginLink = document.getElementById('show-login');
+      showLoginLink.addEventListener('click', (event) => {
+        event.preventDefault();
+        show('login', true);
       });
 
       tabs.addEventListener('keydown', (event) => {
