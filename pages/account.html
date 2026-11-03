@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account | RedStore</title>
+  <meta name="description" content="Log in to your RedStore account or create a new one to shop sportswear, shoes and accessories.">
+  <meta name="theme-color" content="#ff523b">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Account | RedStore">
+  <meta property="og:description" content="Log in or register to shop sportswear, shoes and accessories at RedStore.">
+  <meta property="og:image" content="../assets/images/hero/hero.webp">
+
+  <link rel="icon" href="../assets/images/icons/favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/pages/account.css">
+  <script src="../assets/js/main.js" defer></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="logo" href="../index.html" aria-label="RedStore home">
+        <img src="../assets/images/logo/logo.png" alt="RedStore" width="125" height="36">
+      </a>
+
+      <nav class="nav" aria-label="Main">
+        <ul class="nav__list" id="nav-list">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="products.html">Products</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="account.html" aria-current="page">Account</a></li>
+        </ul>
+      </nav>
+
+      <a class="cart-link" href="#" aria-label="Shopping cart">
+        <img src="../assets/images/icons/cart.png" alt="Shopping cart" width="30" height="30">
+      </a>
+
+      <button class="nav-toggle" type="button" aria-controls="nav-list" aria-expanded="false" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false">
+          <path class="nav-toggle__bars" d="M3 6h18M3 12h18M3 18h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ---------- Account ---------- -->
+    <section class="account-page" aria-labelledby="account-title">
+      <div class="container">
+        <h1 id="account-title" class="visually-hidden">Account</h1>
+
+        <div class="account-page__inner">
+          <div class="account-page__media">
+            <img class="account-page__image" src="../assets/images/hero/hero.webp" alt="Two footballers in action: one kicking mid-air, the other celebrating beside a ball" width="1000" height="862">
+          </div>
+
+          <div class="account-page__content">
+            <div class="auth-card">
+              <div class="auth-card__tabs" role="tablist" aria-label="Account access">
+                <button class="auth-card__tab" id="login-tab" type="button" role="tab" aria-controls="login-form" aria-selected="false" tabindex="-1">Login</button>
+                <button class="auth-card__tab" id="register-tab" type="button" role="tab" aria-controls="register-form" aria-selected="true" tabindex="0">Register</button>
+                <span class="auth-card__indicator" aria-hidden="true"></span>
+              </div>
+
+              <form class="auth-form auth-form--login" id="login-form" role="tabpanel" aria-labelledby="login-tab" aria-hidden="true" inert>
+                <label class="visually-hidden" for="login-username">Username</label>
+                <input id="login-username" name="username" type="text" placeholder="Username" autocomplete="username">
+
+                <label class="visually-hidden" for="login-password">Password</label>
+                <input id="login-password" name="password" type="password" placeholder="Password" autocomplete="current-password">
+
+                <button class="btn auth-form__submit" type="submit">Login</button>
+                <a class="auth-form__link" href="#">Forgot password?</a>
+              </form>
+
+              <form class="auth-form auth-form--register" id="register-form" role="tabpanel" aria-labelledby="register-tab">
+                <label class="visually-hidden" for="register-username">Username</label>
+                <input id="register-username" name="username" type="text" placeholder="Username" autocomplete="username">
+
+                <label class="visually-hidden" for="register-email">Email</label>
+                <input id="register-email" name="email" type="email" placeholder="Email" autocomplete="email">
+
+                <label class="visually-hidden" for="register-password">Password</label>
+                <input id="register-password" name="password" type="password" placeholder="Password" autocomplete="new-password">
+
+                <button class="btn auth-form__submit" type="submit">Register</button>
+                <a class="auth-form__link" href="#">Already have an account?</a>
+                <p>By creating an account, you agree to RedStore's <a href="#">Conditions of Use</a> and <a href="#">Privacy Policy</a>.</p>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ---------- Footer ---------- -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="site-footer__grid">
+        <section class="footer-app" aria-labelledby="app-title">
+          <h2 id="app-title">Download Our App</h2>
+          <p>Download the app for Android and iOS mobile phones.</p>
+          <div class="footer-app__badges">
+            <a href="#"><img src="../assets/images/badges/google-play.png" alt="Get it on Google Play" width="140" height="42" loading="lazy" decoding="async"></a>
+            <a href="#"><img src="../assets/images/badges/app-store.png" alt="Download on the App Store" width="140" height="42" loading="lazy" decoding="async"></a>
+          </div>
+        </section>
+
+        <section class="footer-about" id="about" aria-labelledby="about-title">
+          <img src="../assets/images/logo/logo-white.png" alt="RedStore" width="180" height="53" loading="lazy" decoding="async">
+          <h2 id="about-title" class="visually-hidden">About RedStore</h2>
+          <p>Our purpose is to sustainably make the pleasure and benefits of sports accessible to the many.</p>
+        </section>
+
+        <nav class="footer-links" aria-labelledby="links-title">
+          <h2 id="links-title">Useful Links</h2>
+          <ul>
+            <li><a href="#">Coupons</a></li>
+            <li><a href="#">Blog Posts</a></li>
+            <li><a href="#">Return Policy</a></li>
+            <li><a href="#">Join Affiliate</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-links" aria-labelledby="social-title">
+          <h2 id="social-title">Follow Us</h2>
+          <ul>
+            <li><a href="#" rel="noopener">Facebook</a></li>
+            <li><a href="#" rel="noopener">Twitter</a></li>
+            <li><a href="#" rel="noopener">Instagram</a></li>
+            <li><a href="#" rel="noopener">YouTube</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <hr>
+      <p class="copyright">&copy; <span id="year">2026</span> RedStore &ndash; Baqer</p>
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const card = document.querySelector('.auth-card');
+      if (!card) return;
+
+      const tabs = card.querySelector('.auth-card__tabs');
+      const views = {
+        login: {
+          tab: document.getElementById('login-tab'),
+          panel: document.getElementById('login-form'),
+        },
+        register: {
+          tab: document.getElementById('register-tab'),
+          panel: document.getElementById('register-form'),
+        },
+      };
+
+      const show = (name, moveFocus = false) => {
+        Object.entries(views).forEach(([viewName, view]) => {
+          const isActive = viewName === name;
+
+          view.tab.setAttribute('aria-selected', String(isActive));
+          view.tab.tabIndex = isActive ? 0 : -1;
+          view.panel.inert = !isActive;
+          view.panel.setAttribute('aria-hidden', String(!isActive));
+
+          if (isActive && moveFocus) view.tab.focus();
+        });
+
+        card.classList.toggle('is-login', name === 'login');
+      };
+
+      Object.entries(views).forEach(([name, view]) => {
+        view.tab.addEventListener('click', () => show(name));
+      });
+
+      tabs.addEventListener('keydown', (event) => {
+        if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+
+        event.preventDefault();
+        const current = card.classList.contains('is-login') ? 'login' : 'register';
+        show(current === 'login' ? 'register' : 'login', true);
+      });
+
+      show('register');
+    })();
+  </script>
+</body>
+</html>

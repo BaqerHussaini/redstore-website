@@ -1,0 +1,144 @@
+/* ==========================================================================
+   RedStore – account page
+   Page-specific styles layered on top of main.css.
+   ========================================================================== */
+
+/* ---------- Account section ---------- */
+.account-page {
+  padding-block: 50px;
+  background: var(--gradient-soft);
+}
+
+.account-page__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.account-page__media,
+.account-page__content {
+  flex-basis: 50%;
+  min-width: 300px;
+}
+
+.account-page__image {
+  width: 100%;
+  padding-block: 50px;
+}
+
+/* ---------- Auth card ---------- */
+.auth-card {
+  position: relative;
+  width: 300px;
+  height: 450px;
+  margin-inline: auto;
+  padding-block: 20px;
+  overflow: hidden;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  text-align: center;
+}
+
+.auth-card__tabs {
+  display: inline-block;
+}
+
+.auth-card__tab {
+  display: inline-block;
+  width: 100px;
+  padding-inline: 10px;
+  border: 0;
+  background: none;
+  color: var(--color-text-muted);
+  font: inherit;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.auth-card__indicator {
+  display: block;
+  width: 100px;
+  height: 3px;
+  margin-top: 8px;
+  border: 0;
+  background: var(--color-brand);
+  transform: translateX(100px);
+  transition: transform 1s;
+}
+
+.auth-card.is-login .auth-card__indicator {
+  transform: translateX(0);
+}
+
+/* ---------- Auth forms ---------- */
+.auth-form {
+  position: absolute;
+  top: 130px;
+  max-width: 300px;
+  padding-inline: 20px;
+  transition: transform 1s;
+}
+
+.auth-form--login {
+  left: -300px;
+}
+
+.auth-form--register {
+  left: 0;
+}
+
+.auth-card.is-login .auth-form {
+  transform: translateX(300px);
+}
+
+.auth-form input {
+  width: 100%;
+  height: 30px;
+  margin-block: 10px;
+  padding-inline: 10px;
+  border: 1px solid #ccc;
+  font: inherit;
+}
+
+.auth-form .btn {
+  width: 100%;
+  margin-block: 10px;
+  padding-block: 8px;
+  border: 0;
+  background: var(--color-brand);
+  font: inherit;
+  cursor: pointer;
+}
+
+.auth-form .btn:hover {
+  background: var(--color-brand-dark);
+}
+
+.auth-form__link {
+  color: var(--color-text-muted);
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.auth-form p {
+  margin-top: 8px;
+  text-align: left;
+  font-size: 12px;
+}
+
+.auth-form__link:hover {
+  text-decoration: underline;
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 600px) {
+  .account-page__inner {
+    text-align: center;
+  }
+
+  .account-page__media,
+  .account-page__content {
+    flex-basis: 100%;
+  }
+}
