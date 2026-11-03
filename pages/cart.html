@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping Cart | RedStore</title>
+  <meta name="description" content="Review the items in your RedStore shopping cart, update quantities and check your order total before checkout.">
+  <meta name="theme-color" content="#ff523b">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Shopping Cart | RedStore">
+  <meta property="og:description" content="Review your RedStore cart and order summary before checkout.">
+  <meta property="og:image" content="../assets/images/hero/hero.webp">
+
+  <link rel="icon" href="../assets/images/icons/favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/pages/cart.css">
+  <script src="../assets/js/navigation.js" defer></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="logo" href="../index.html" aria-label="RedStore home">
+        <img src="../assets/images/logo/logo.png" alt="RedStore" width="125" height="36">
+      </a>
+
+      <nav class="nav" aria-label="Main">
+        <ul class="nav__list" id="nav-list">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="products.html">Products</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="account.html">Account</a></li>
+        </ul>
+      </nav>
+
+      <a class="cart-link" href="cart.html" aria-label="Shopping cart" aria-current="page">
+        <img src="../assets/images/icons/cart.png" alt="Shopping cart" width="30" height="30">
+      </a>
+
+      <button class="nav-toggle" type="button" aria-controls="nav-list" aria-expanded="false" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false">
+          <path class="nav-toggle__bars" d="M3 6h18M3 12h18M3 18h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ---------- Cart ---------- -->
+    <section class="cart-page" aria-labelledby="cart-title">
+      <div class="container container--narrow">
+        <h1 id="cart-title" class="visually-hidden">Shopping Cart</h1>
+
+        <table class="cart-table">
+          <caption class="visually-hidden">Items in your shopping cart</caption>
+          <thead>
+            <tr>
+              <th scope="col">Product</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="cart-item">
+                  <img class="cart-item__image" src="../assets/images/bought/buy-1.jpg" alt="Printed T-shirt" width="80" height="80" loading="lazy" decoding="async">
+                  <div class="cart-item__details">
+                    <p class="cart-item__name">Printed T-Shirt</p>
+                    <small class="cart-item__price">Price: $50.00</small>
+                    <a class="cart-item__remove" href="#" aria-label="Remove Printed T-Shirt from cart">Remove</a>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <label class="visually-hidden" for="quantity-1">Quantity for Printed T-Shirt</label>
+                <input class="cart-item__qty" id="quantity-1" name="quantity-1" type="number" value="1" min="1" inputmode="numeric">
+              </td>
+              <td>$50.00</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="cart-item">
+                  <img class="cart-item__image" src="../assets/images/bought/buy-2.jpg" alt="Printed T-shirt" width="80" height="80" loading="lazy" decoding="async">
+                  <div class="cart-item__details">
+                    <p class="cart-item__name">Printed T-Shirt</p>
+                    <small class="cart-item__price">Price: $75.00</small>
+                    <a class="cart-item__remove" href="#" aria-label="Remove Printed T-Shirt from cart">Remove</a>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <label class="visually-hidden" for="quantity-2">Quantity for Printed T-Shirt</label>
+                <input class="cart-item__qty" id="quantity-2" name="quantity-2" type="number" value="1" min="1" inputmode="numeric">
+              </td>
+              <td>$75.00</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="cart-item">
+                  <img class="cart-item__image" src="../assets/images/bought/buy-3.jpg" alt="Printed T-shirt" width="80" height="80" loading="lazy" decoding="async">
+                  <div class="cart-item__details">
+                    <p class="cart-item__name">Printed T-Shirt</p>
+                    <small class="cart-item__price">Price: $75.00</small>
+                    <a class="cart-item__remove" href="#" aria-label="Remove Printed T-Shirt from cart">Remove</a>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <label class="visually-hidden" for="quantity-3">Quantity for Printed T-Shirt</label>
+                <input class="cart-item__qty" id="quantity-3" name="quantity-3" type="number" value="1" min="1" inputmode="numeric">
+              </td>
+              <td>$75.00</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="cart-summary">
+          <table class="cart-summary__table">
+            <caption class="visually-hidden">Order summary</caption>
+            <tbody>
+              <tr>
+                <th scope="row">Subtotal</th>
+                <td>$200.00</td>
+              </tr>
+              <tr>
+                <th scope="row">Tax</th>
+                <td>$35.00</td>
+              </tr>
+              <tr>
+                <th scope="row">Total</th>
+                <td>$230.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ---------- Footer ---------- -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="site-footer__grid">
+        <section class="footer-app" aria-labelledby="app-title">
+          <h2 id="app-title">Download Our App</h2>
+          <p>Download the app for Android and iOS mobile phones.</p>
+          <div class="footer-app__badges">
+            <a href="#"><img src="../assets/images/badges/google-play.png" alt="Get it on Google Play" width="140" height="42" loading="lazy" decoding="async"></a>
+            <a href="#"><img src="../assets/images/badges/app-store.png" alt="Download on the App Store" width="140" height="42" loading="lazy" decoding="async"></a>
+          </div>
+        </section>
+
+        <section class="footer-about" id="about" aria-labelledby="about-title">
+          <img src="../assets/images/logo/logo-white.png" alt="RedStore" width="180" height="53" loading="lazy" decoding="async">
+          <h2 id="about-title" class="visually-hidden">About RedStore</h2>
+          <p>Our purpose is to sustainably make the pleasure and benefits of sports accessible to the many.</p>
+        </section>
+
+        <nav class="footer-links" aria-labelledby="links-title">
+          <h2 id="links-title">Useful Links</h2>
+          <ul>
+            <li><a href="#">Coupons</a></li>
+            <li><a href="#">Blog Posts</a></li>
+            <li><a href="#">Return Policy</a></li>
+            <li><a href="#">Join Affiliate</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-links" aria-labelledby="social-title">
+          <h2 id="social-title">Follow Us</h2>
+          <ul>
+            <li><a href="#" rel="noopener">Facebook</a></li>
+            <li><a href="#" rel="noopener">Twitter</a></li>
+            <li><a href="#" rel="noopener">Instagram</a></li>
+            <li><a href="#" rel="noopener">YouTube</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <hr>
+      <p class="copyright">&copy; <span id="year">2026</span> RedStore &ndash; Baqer</p>
+    </div>
+  </footer>
+</body>
+</html>

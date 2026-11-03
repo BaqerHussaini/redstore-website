@@ -1,0 +1,108 @@
+/* ==========================================================================
+   RedStore – cart page
+   Page-specific styles layered on top of main.css.
+   ========================================================================== */
+
+/* ---------- Cart section ---------- */
+.cart-page {
+  padding-block: 80px;
+}
+
+/* ---------- Cart table ---------- */
+.cart-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cart-table th {
+  padding: 5px;
+  background: var(--color-brand);
+  color: #fff;
+  font-weight: 400;
+  text-align: left;
+}
+
+.cart-table td {
+  padding: 10px 5px;
+}
+
+.cart-table th:last-child,
+.cart-table td:last-child {
+  text-align: right;
+}
+
+/* ---------- Cart item ---------- */
+.cart-item {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.cart-item__image {
+  width: 80px;
+  height: 80px;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+.cart-item__name {
+  color: var(--color-text-muted);
+}
+
+.cart-item__price {
+  display: block;
+  color: var(--color-text-muted);
+  font-size: 0.83rem;
+}
+
+.cart-item__remove {
+  display: inline-block;
+  color: var(--color-brand);
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.cart-item__remove:hover {
+  text-decoration: underline;
+}
+
+.cart-item__qty {
+  width: 40px;
+  height: 30px;
+  padding: 5px;
+  font: inherit;
+}
+
+/* ---------- Order summary ---------- */
+.cart-summary {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.cart-summary__table {
+  width: 100%;
+  max-width: 400px;
+  border-collapse: collapse;
+  border-top: 3px solid var(--color-brand);
+}
+
+.cart-summary__table th,
+.cart-summary__table td {
+  padding: 10px 5px;
+}
+
+.cart-summary__table th {
+  color: var(--color-text-muted);
+  font-weight: 400;
+  text-align: left;
+}
+
+.cart-summary__table td {
+  text-align: right;
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 600px) {
+  .cart-item__name {
+    display: none;
+  }
+}
