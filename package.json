@@ -1,0 +1,21 @@
+{
+  "name": "redstore-website",
+  "version": "1.0.0",
+  "description": "A responsive static storefront built with semantic HTML, modern CSS, and vanilla JavaScript. No build step, package installation, or frameworks are required.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BaqerHussaini/redstore-website.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/BaqerHussaini/redstore-website/issues"
+  },
+  "homepage": "https://github.com/BaqerHussaini/redstore-website#readme"
+}

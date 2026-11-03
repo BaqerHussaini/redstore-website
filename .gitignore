@@ -1,0 +1,36 @@
+# Node / package managers
+node_modules/
+package-lock.json
+npm-debug.log*
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Database / local data volumes
+*.sqlite
+*.sqlite3
+db-data/
+data/
+database/data/
+postgres-data/
+mysql-data/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs
+logs/
+*.log
+
+# Build outputs (future-proof)
+.dist/
+dist/
+build/
+.cache/
+.next/
+out/
