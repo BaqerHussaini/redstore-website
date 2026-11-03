@@ -19,7 +19,8 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap">
   <link rel="stylesheet" href="../assets/css/main.css">
   <link rel="stylesheet" href="../assets/css/pages/account.css">
-  <script src="../assets/js/main.js" defer></script>
+  <script src="../assets/js/navigation.js" defer></script>
+  <script src="../assets/js/account-auth.js" defer></script>
 </head>
 
 <body>
@@ -149,60 +150,5 @@
     </div>
   </footer>
 
-  <script>
-    (() => {
-      'use strict';
-
-      const card = document.querySelector('.auth-card');
-      if (!card) return;
-
-      const tabs = card.querySelector('.auth-card__tabs');
-      const views = {
-        login: {
-          tab: document.getElementById('login-tab'),
-          panel: document.getElementById('login-form'),
-        },
-        register: {
-          tab: document.getElementById('register-tab'),
-          panel: document.getElementById('register-form'),
-        },
-      };
-
-      const show = (name, moveFocus = false) => {
-        Object.entries(views).forEach(([viewName, view]) => {
-          const isActive = viewName === name;
-
-          view.tab.setAttribute('aria-selected', String(isActive));
-          view.tab.tabIndex = isActive ? 0 : -1;
-          view.panel.inert = !isActive;
-          view.panel.setAttribute('aria-hidden', String(!isActive));
-
-          if (isActive && moveFocus) view.tab.focus();
-        });
-
-        card.classList.toggle('is-login', name === 'login');
-      };
-
-      Object.entries(views).forEach(([name, view]) => {
-        view.tab.addEventListener('click', () => show(name));
-      });
-
-      const showLoginLink = document.getElementById('show-login');
-      showLoginLink.addEventListener('click', (event) => {
-        event.preventDefault();
-        show('login', true);
-      });
-
-      tabs.addEventListener('keydown', (event) => {
-        if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
-
-        event.preventDefault();
-        const current = card.classList.contains('is-login') ? 'login' : 'register';
-        show(current === 'login' ? 'register' : 'login', true);
-      });
-
-      show('register');
-    })();
-  </script>
 </body>
 </html>

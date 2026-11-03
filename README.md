@@ -37,7 +37,8 @@ redstore-website/
 │   │       ├── home.css    # homepage-only styles
 │   │       └── products.css # products-page-only styles
 │   ├── js/
-│   │   └── main.js         # mobile menu toggle, footer year
+│   │   ├── navigation.js   # mobile menu toggle, footer year
+│   │   └── account-auth.js # login/register tab switching
 │   └── images/
 │       ├── brands/  ├── categories/  ├── hero/  ├── icons/
 │       ├── logo/    ├── badges/      ├── products/  └── users/
