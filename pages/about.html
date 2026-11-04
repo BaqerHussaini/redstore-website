@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us | RedStore</title>
+  <meta name="description" content="Learn about RedStore: our story, the values behind our sportswear, and our mission to make the benefits of sport accessible to everyone.">
+  <meta name="theme-color" content="#ff523b">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="About Us | RedStore">
+  <meta property="og:description" content="Discover the story and values behind RedStore sportswear, shoes and accessories.">
+  <meta property="og:image" content="../assets/images/about/about-hero.webp">
+
+  <link rel="icon" href="../assets/images/icons/favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="image" href="../assets/images/about/about-hero.webp" type="image/webp">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/pages/about.css">
+  <script src="../assets/js/navigation.js" defer></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- SVG sprite: value icons -->
+  <svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="icon-quality" viewBox="0 0 24 24"><path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></symbol>
+    <symbol id="icon-sustainable" viewBox="0 0 24 24"><path d="M6.05 8.05c-2.73 2.73-2.73 7.17 0 9.9 1.48-3.41 4.09-6.24 7.36-7.94-2.77 2.34-4.7 5.61-5.38 9.33 2.6 1.23 5.8.78 7.95-1.37C19.43 14.47 20 4 20 4S9.53 4.57 6.05 8.05z"/></symbol>
+    <symbol id="icon-community" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></symbol>
+  </svg>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="logo" href="../index.html" aria-label="RedStore home">
+        <img src="../assets/images/logo/logo.png" alt="RedStore" width="125" height="36">
+      </a>
+
+      <nav class="nav" aria-label="Main">
+        <ul class="nav__list" id="nav-list">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="products.html">Products</a></li>
+          <li><a href="about.html" aria-current="page">About</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="account.html">Account</a></li>
+        </ul>
+      </nav>
+
+      <a class="cart-link" href="cart.html" aria-label="Shopping cart">
+        <img src="../assets/images/icons/cart.png" alt="Shopping cart" width="30" height="30">
+      </a>
+
+      <button class="nav-toggle" type="button" aria-controls="nav-list" aria-expanded="false" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false">
+          <path class="nav-toggle__bars" d="M3 6h18M3 12h18M3 18h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ---------- Hero ---------- -->
+    <section class="about-hero" aria-labelledby="about-title">
+      <div class="container">
+        <div class="about-hero__inner">
+          <div class="about-hero__text">
+            <p class="about-eyebrow">About RedStore</p>
+            <h1 id="about-title">Sport belongs to everyone.</h1>
+            <p>RedStore exists to make the gear that keeps you moving easier to find and easier to afford. We curate everyday essentials and performance favourites, so you can spend less time shopping and more time doing.</p>
+            <a class="btn" href="products.html">Shop the collection <span aria-hidden="true">&rarr;</span></a>
+          </div>
+
+          <div class="about-hero__media">
+            <img class="about-hero__img--main" src="../assets/images/about/about-hero.webp" alt="Two runners training together on an outdoor athletics track" width="900" height="1125" fetchpriority="high">
+            <img class="about-hero__img--accent" src="../assets/images/about/about-hero-detail.webp" alt="Close-up of an athlete tying the laces of a running shoe" width="600" height="600">
+          </div>
+        </div>
+
+        <dl class="about-stats">
+          <div>
+            <dt>Happy customers</dt>
+            <dd>10k+</dd>
+          </div>
+          <div>
+            <dt>Brand partners</dt>
+            <dd>5</dd>
+          </div>
+          <div>
+            <dt>Easy returns</dt>
+            <dd>30-day</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ---------- Story ---------- -->
+    <section class="section about-story" aria-labelledby="story-title">
+      <div class="container container--narrow about-story__inner">
+        <div class="about-story__media">
+          <img src="../assets/images/about/about-store.webp" alt="Bright store interior with racks of apparel on display" width="1000" height="1250" loading="lazy" decoding="async">
+        </div>
+
+        <div class="about-story__text">
+          <p class="about-eyebrow">Our story</p>
+          <h2 id="story-title">Built around the gear you actually wear.</h2>
+          <p>What began as a small collection of t-shirts and trainers has grown into a complete sportswear destination. We focus on the pieces you actually reach for: breathable basics, reliable shoes and accessories that keep up with your day.</p>
+          <p>Every product is chosen for fit, comfort and durability. We work with trusted brands, keep our range tightly curated, and make it easy to shop online and get moving.</p>
+
+          <blockquote class="about-story__quote">
+            <p>&ldquo;We would rather sell ten things people love than a thousand things they forget.&rdquo;</p>
+            <footer>&mdash; The RedStore team</footer>
+          </blockquote>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- Values ---------- -->
+    <section class="section about-values" aria-labelledby="values-title">
+      <div class="container container--narrow">
+        <h2 id="values-title" class="section-title">What We Stand For</h2>
+
+        <ul class="grid grid--3">
+          <li>
+            <article class="about-value">
+              <svg class="icon about-value__icon" aria-hidden="true"><use href="#icon-quality"/></svg>
+              <h3>Quality That Lasts</h3>
+              <p>We choose durable materials and dependable construction, so the gear you buy keeps up with every session.</p>
+            </article>
+          </li>
+          <li>
+            <article class="about-value">
+              <svg class="icon about-value__icon" aria-hidden="true"><use href="#icon-sustainable"/></svg>
+              <h3>Better Choices</h3>
+              <p>We favour products and partners that reduce waste and help make sport more sustainable for the future.</p>
+            </article>
+          </li>
+          <li>
+            <article class="about-value">
+              <svg class="icon about-value__icon" aria-hidden="true"><use href="#icon-community"/></svg>
+              <h3>Open to Everyone</h3>
+              <p>Fair prices, inclusive sizing and a welcoming range, because movement should be within everyone&rsquo;s reach.</p>
+            </article>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ---------- Standard ---------- -->
+    <section class="section about-standard" aria-labelledby="standard-title">
+      <div class="container container--narrow">
+        <div class="about-standard__inner">
+          <div class="about-standard__text">
+            <p class="about-eyebrow">The RedStore standard</p>
+            <h2 id="standard-title">How we choose what we sell</h2>
+            <p>Every product has to earn its place in the range. If it does not pass these four checks, we leave it out.</p>
+          </div>
+
+          <ul class="about-standard__list">
+            <li>Fit and comfort tested in the real world</li>
+            <li>Durable materials and dependable construction</li>
+            <li>Fair prices without inflated markups</li>
+            <li>Partners who treat people and the planet well</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- Call to action ---------- -->
+    <section class="about-cta" aria-labelledby="cta-title">
+      <div class="container container--narrow">
+        <div class="about-cta__inner">
+          <p class="about-eyebrow">Ready when you are</p>
+          <h2 id="cta-title">Find your next favourite.</h2>
+          <p>Explore the full collection and gear up for whatever moves you.</p>
+          <a class="btn" href="products.html">Shop all products <span aria-hidden="true">&rarr;</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ---------- Footer ---------- -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="site-footer__grid">
+        <section class="footer-app" aria-labelledby="app-title">
+          <h2 id="app-title">Download Our App</h2>
+          <p>Download the app for Android and iOS mobile phones.</p>
+          <div class="footer-app__badges">
+            <a href="#"><img src="../assets/images/badges/google-play.png" alt="Get it on Google Play" width="140" height="42" loading="lazy" decoding="async"></a>
+            <a href="#"><img src="../assets/images/badges/app-store.png" alt="Download on the App Store" width="140" height="42" loading="lazy" decoding="async"></a>
+          </div>
+        </section>
+
+        <section class="footer-about" id="about" aria-labelledby="about-footer-title">
+          <img src="../assets/images/logo/logo-white.png" alt="RedStore" width="180" height="53" loading="lazy" decoding="async">
+          <h2 id="about-footer-title" class="visually-hidden">About RedStore</h2>
+          <p>Our purpose is to sustainably make the pleasure and benefits of sports accessible to the many.</p>
+        </section>
+
+        <nav class="footer-links" aria-labelledby="links-title">
+          <h2 id="links-title">Useful Links</h2>
+          <ul>
+            <li><a href="#">Coupons</a></li>
+            <li><a href="#">Blog Posts</a></li>
+            <li><a href="#">Return Policy</a></li>
+            <li><a href="#">Join Affiliate</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-links" aria-labelledby="social-title">
+          <h2 id="social-title">Follow Us</h2>
+          <ul>
+            <li><a href="#" rel="noopener">Facebook</a></li>
+            <li><a href="#" rel="noopener">Twitter</a></li>
+            <li><a href="#" rel="noopener">Instagram</a></li>
+            <li><a href="#" rel="noopener">YouTube</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <hr>
+      <p class="copyright">&copy; <span id="year">2026</span> RedStore &vert; Ecommerce &middot; All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -6,6 +6,9 @@ A responsive static storefront built with semantic HTML, modern CSS, and vanilla
 
 - `index.html` — homepage with hero, categories, featured and latest products, offer, testimonials, and brands.
 - `pages/products.html` — full product listing with sorting controls and pagination.
+- `pages/about.html` — the RedStore story, values, and a call to action.
+- `pages/account.html` — login and registration forms with tab switching.
+- `pages/cart.html` — shopping cart with item quantities and an order summary.
 
 ## Run it
 
@@ -26,6 +29,9 @@ Then visit `http://localhost:8000`.
 redstore-website/
 ├── index.html
 ├── pages/
+│   ├── about.html          # about page
+│   ├── account.html        # login and registration
+│   ├── cart.html           # shopping cart
 │   └── products.html       # products listing page
 ├── assets/
 │   ├── css/
@@ -34,14 +40,18 @@ redstore-website/
 │   │   ├── layout.css      # containers, section rhythm, grids
 │   │   ├── components.css  # buttons, titles, ratings, cards, header, footer
 │   │   └── pages/
+│   │       ├── about.css   # about-page-only styles
+│   │       ├── account.css # account-page-only styles
+│   │       ├── cart.css    # cart-page-only styles
 │   │       ├── home.css    # homepage-only styles
 │   │       └── products.css # products-page-only styles
 │   ├── js/
 │   │   ├── navigation.js   # mobile menu toggle, footer year
 │   │   └── account-auth.js # login/register tab switching
 │   └── images/
-│       ├── brands/  ├── categories/  ├── hero/  ├── icons/
-│       ├── logo/    ├── badges/      ├── products/  └── users/
+│       ├── badges/     ├── bought/     ├── brands/
+│       ├── categories/ ├── hero/       ├── icons/
+│       ├── logo/       ├── products/   └── users/
 └── README.md
 ```
 

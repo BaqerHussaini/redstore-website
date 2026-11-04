@@ -1,0 +1,274 @@
+/* ==========================================================================
+   RedStore – about page
+   Page-specific styles layered on top of main.css.
+   ========================================================================== */
+
+/* ---------- Shared eyebrow ---------- */
+.about-eyebrow {
+  color: var(--color-brand-strong);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* --------- Hero ---------- */
+.about-hero {
+  padding-bottom: 2.5rem;
+  background: var(--gradient-soft);
+}
+
+.about-hero__inner {
+  display: grid;
+  align-items: center;
+  gap: 2rem;
+  padding-block: clamp(2.5rem, 6vw, 4.5rem) 2rem;
+}
+
+.about-hero h1 {
+  margin-block: 0.5rem 1rem;
+  font-size: clamp(2.1rem, 6vw, 3.4rem);
+  line-height: 1.15;
+  color: var(--color-text);
+}
+
+.about-hero__text p:not(.about-eyebrow) {
+  max-width: 52ch;
+  margin-bottom: 1.75rem;
+}
+
+.about-hero__media {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  margin-inline: auto;
+}
+
+.about-hero__img--main {
+  width: 80%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.about-hero__img--accent {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 46%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border: 5px solid var(--color-surface);
+  border-radius: 8px;
+}
+
+.about-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgb(0 0 0 / 0.12);
+}
+
+.about-stats div {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.about-stats dt {
+  color: var(--color-text-subtle);
+  font-size: 0.8rem;
+}
+
+.about-stats dd {
+  margin: 0;
+  color: var(--color-brand-strong);
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+  .about-hero__inner {
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 3rem;
+  }
+}
+
+/* ---------- Story ---------- */
+.about-story__inner {
+  display: grid;
+  align-items: center;
+  gap: 2rem;
+}
+
+.about-story__media img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.about-story__text h2 {
+  margin-block: 0.5rem 1rem;
+  font-size: clamp(1.6rem, 4vw, 2.25rem);
+  line-height: 1.25;
+  color: var(--color-text);
+}
+
+.about-story__text > p {
+  margin-top: 0.9rem;
+}
+
+.about-story__quote {
+  margin: 1.75rem 0 0;
+  padding-left: 1.25rem;
+  border-left: 4px solid var(--color-brand);
+}
+
+.about-story__quote p {
+  color: var(--color-text);
+  font-size: 1.05rem;
+  font-style: italic;
+}
+
+.about-story__quote footer {
+  margin-top: 0.5rem;
+  color: var(--color-text-subtle);
+  font-size: 0.85rem;
+}
+
+@media (min-width: 768px) {
+  .about-story__inner {
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 3.5rem;
+  }
+}
+
+/* ---------- Values ---------- */
+.about-values .grid {
+  align-items: stretch;
+}
+
+.about-value {
+  height: 100%;
+  padding: 2rem 1.5rem;
+  border-radius: 6px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  text-align: center;
+  transition: transform 0.4s ease;
+}
+
+.about-value:hover {
+  transform: translateY(-5px);
+}
+
+.about-value__icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-inline: auto;
+  color: var(--color-brand);
+}
+
+.about-value h3 {
+  margin-block: 1rem 0.5rem;
+  font-size: 1.1rem;
+  color: var(--color-text-muted);
+}
+
+.about-value p {
+  font-size: 0.9rem;
+}
+
+/* ---------- Standard ---------- */
+.about-standard__inner {
+  display: grid;
+  gap: 2rem;
+  padding: clamp(1.75rem, 5vw, 3rem);
+  border-radius: 8px;
+  background: #fff4f1;
+}
+
+.about-standard__text h2 {
+  margin-block: 0.5rem 1rem;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  color: var(--color-text);
+}
+
+.about-standard__text p {
+  max-width: 46ch;
+}
+
+.about-standard__list {
+  display: grid;
+  gap: 0.9rem;
+  align-content: center;
+}
+
+.about-standard__list li {
+  position: relative;
+  padding-left: 2rem;
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+}
+
+.about-standard__list li::before {
+  content: "";
+  position: absolute;
+  top: 0.35em;
+  left: 0;
+  width: 1.1rem;
+  height: 0.6rem;
+  border-left: 2px solid var(--color-brand-strong);
+  border-bottom: 2px solid var(--color-brand-strong);
+  transform: rotate(-45deg);
+}
+
+@media (min-width: 768px) {
+  .about-standard__inner {
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 3rem;
+  }
+}
+
+/* ---------- Call to action ---------- */
+.about-cta {
+  padding-block: var(--space-section);
+}
+
+.about-cta__inner {
+  padding: clamp(2.5rem, 6vw, 4rem) clamp(1.5rem, 5vw, 3rem);
+  border-radius: 8px;
+  background: var(--color-brand-strong);
+  text-align: center;
+}
+
+.about-cta__inner .about-eyebrow {
+  color: #ffd2cb;
+}
+
+.about-cta h2 {
+  margin-block: 0.5rem 1rem;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  color: #fff;
+}
+
+.about-cta p {
+  max-width: 48ch;
+  margin-inline: auto;
+  color: rgb(255 255 255 / 0.85);
+}
+
+.about-cta .btn {
+  margin-top: 1.75rem;
+  background: #fff;
+  color: var(--color-brand-strong);
+}
+
+.about-cta .btn:hover {
+  background: var(--color-brand-dark);
+  color: #fff;
+}
