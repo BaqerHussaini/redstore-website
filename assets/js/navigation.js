@@ -7,12 +7,19 @@
 
   const toggle = document.querySelector('.nav-toggle');
   const list = document.getElementById('nav-list');
+  const bars = toggle?.querySelector('.nav-toggle__bars');
   const desktopQuery = window.matchMedia('(min-width: 768px)');
+
+  const icons = {
+    open: 'M3 6h18M3 12h18M3 18h18',
+    close: 'M6 6l12 12M18 6L6 18',
+  };
 
   const setMenu = (open) => {
     list.classList.toggle('is-open', open);
     toggle.setAttribute('aria-expanded', String(open));
     toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    bars?.setAttribute('d', open ? icons.close : icons.open);
   };
 
   if (toggle && list) {

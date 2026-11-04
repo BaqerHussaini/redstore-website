@@ -158,6 +158,14 @@
   cursor: pointer;
 }
 
+.nav-toggle svg {
+  transition: transform var(--transition);
+}
+
+.nav-toggle[aria-expanded="true"] svg {
+  transform: rotate(90deg);
+}
+
 @media (min-width: 768px) {
   .nav__list {
     display: flex;
