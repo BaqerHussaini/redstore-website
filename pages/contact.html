@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us | RedStore</title>
+  <meta name="description" content="Contact RedStore customer service for help with an order, a return, product advice, or anything else. We reply within one business day.">
+  <meta name="theme-color" content="#ff523b">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Contact Us | RedStore">
+  <meta property="og:description" content="Questions about an order, a return, or the right gear? Get in touch with the RedStore team.">
+  <meta property="og:image" content="../assets/images/hero/hero.webp">
+
+  <link rel="icon" href="../assets/images/icons/favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/pages/contact.css">
+  <script src="../assets/js/navigation.js" defer></script>
+  <script src="../assets/js/contact-form.js" defer></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- SVG sprite: support icons -->
+  <svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="icon-track" viewBox="0 0 24 24"><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9 1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></symbol>
+    <symbol id="icon-return" viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></symbol>
+    <symbol id="icon-faq" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></symbol>
+    <symbol id="icon-mail" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></symbol>
+    <symbol id="icon-clock" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></symbol>
+    <symbol id="icon-reply" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></symbol>
+  </svg>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="logo" href="../index.html" aria-label="RedStore home">
+        <img src="../assets/images/logo/logo.png" alt="RedStore" width="125" height="36">
+      </a>
+
+      <nav class="nav" aria-label="Main">
+        <ul class="nav__list" id="nav-list">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="products.html">Products</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html" aria-current="page">Contact</a></li>
+          <li><a href="account.html">Account</a></li>
+        </ul>
+      </nav>
+
+      <a class="cart-link" href="cart.html" aria-label="Shopping cart">
+        <img src="../assets/images/icons/cart.png" alt="Shopping cart" width="30" height="30">
+      </a>
+
+      <button class="nav-toggle" type="button" aria-controls="nav-list" aria-expanded="false" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false">
+          <path class="nav-toggle__bars" d="M3 6h18M3 12h18M3 18h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ---------- Hero ---------- -->
+    <section class="contact-hero" aria-labelledby="contact-title">
+      <div class="container">
+        <p class="contact-eyebrow">Contact RedStore</p>
+        <h1 id="contact-title">We&rsquo;re here to help.</h1>
+        <p>Order on its way? Something not quite right? Not sure which gear to pick? Send us a message and a real person from our team will get back to you.</p>
+
+        <div class="contact-hero__actions">
+          <a class="btn" href="#contact-form">Send a message <span aria-hidden="true">&rarr;</span></a>
+          <a class="contact-hero__link" href="#self-service">Find a quick answer</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- Contact form & support ---------- -->
+    <section class="contact-main" aria-labelledby="form-title">
+      <div class="container container--narrow">
+        <div class="contact-layout">
+          <div class="contact-card">
+            <h2 id="form-title">Send us a message</h2>
+            <p class="contact-card__intro">Tell us what&rsquo;s going on. The more detail you share, the faster we can put it right.</p>
+
+            <form class="contact-form" id="contact-form" novalidate>
+              <div class="contact-form__grid">
+                <div class="contact-field">
+                  <label class="contact-field__label" for="contact-name">Name</label>
+                  <input id="contact-name" name="name" type="text" autocomplete="name" required data-error="Please tell us your name." aria-describedby="contact-name-error">
+                  <p class="contact-field__error" id="contact-name-error" aria-live="polite"></p>
+                </div>
+
+                <div class="contact-field">
+                  <label class="contact-field__label" for="contact-email">Email</label>
+                  <input id="contact-email" name="email" type="email" autocomplete="email" required data-error="Please enter your email address." aria-describedby="contact-email-error">
+                  <p class="contact-field__error" id="contact-email-error" aria-live="polite"></p>
+                </div>
+
+                <div class="contact-field">
+                  <label class="contact-field__label" for="contact-order">Order number <span class="contact-field__optional">(optional)</span></label>
+                  <input id="contact-order" name="order" type="text" autocomplete="off" aria-describedby="contact-order-hint">
+                  <p class="contact-field__hint" id="contact-order-hint">Find this in your confirmation email.</p>
+                </div>
+
+                <div class="contact-field">
+                  <label class="contact-field__label" for="contact-subject">Subject</label>
+                  <select id="contact-subject" name="subject" required data-error="Please choose a subject." aria-describedby="contact-subject-error">
+                    <option value="" disabled selected>Choose a topic</option>
+                    <option value="order-status">Order status</option>
+                    <option value="returns">Returns &amp; exchanges</option>
+                    <option value="product-question">Product question</option>
+                    <option value="feedback">Feedback</option>
+                    <option value="other">Something else</option>
+                  </select>
+                  <p class="contact-field__error" id="contact-subject-error" aria-live="polite"></p>
+                </div>
+
+                <div class="contact-field contact-field--full">
+                  <label class="contact-field__label" for="contact-message">Message</label>
+                  <textarea id="contact-message" name="message" rows="6" minlength="20" required data-error="Please write a message." aria-describedby="contact-message-error"></textarea>
+                  <p class="contact-field__error" id="contact-message-error" aria-live="polite"></p>
+                </div>
+              </div>
+
+              <div class="contact-form__footer">
+                <button class="btn contact-form__submit" type="submit">Send message</button>
+                <p class="contact-form__note">We&rsquo;ll only use your details to reply to this message. Read our <a href="#">Privacy Policy</a>.</p>
+              </div>
+
+              <p class="contact-form__status" id="form-status" role="status" aria-live="polite"></p>
+            </form>
+          </div>
+
+          <aside class="contact-aside" aria-label="Support options">
+            <section class="contact-panel" aria-labelledby="self-service-title" id="self-service">
+              <h2 id="self-service-title">Quick self-service</h2>
+              <ul class="contact-links">
+                <li>
+                  <a class="contact-link" href="#">
+                    <svg class="icon contact-link__icon" aria-hidden="true"><use href="#icon-track"/></svg>
+                    <span class="contact-link__text">
+                      <span class="contact-link__title">Track your order</span>
+                      <span class="contact-link__meta">See where your parcel is</span>
+                    </span>
+                    <span class="contact-link__arrow" aria-hidden="true">&rarr;</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="contact-link" href="#">
+                    <svg class="icon contact-link__icon" aria-hidden="true"><use href="#icon-return"/></svg>
+                    <span class="contact-link__text">
+                      <span class="contact-link__title">Returns &amp; exchanges</span>
+                      <span class="contact-link__meta">Start a return in a few steps</span>
+                    </span>
+                    <span class="contact-link__arrow" aria-hidden="true">&rarr;</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="contact-link" href="#">
+                    <svg class="icon contact-link__icon" aria-hidden="true"><use href="#icon-faq"/></svg>
+                    <span class="contact-link__text">
+                      <span class="contact-link__title">FAQs</span>
+                      <span class="contact-link__meta">Delivery, sizing and more</span>
+                    </span>
+                    <span class="contact-link__arrow" aria-hidden="true">&rarr;</span>
+                  </a>
+                </li>
+              </ul>
+            </section>
+
+            <section class="contact-panel contact-panel--details" aria-labelledby="direct-title">
+              <h2 id="direct-title">Talk to a human</h2>
+              <dl class="contact-details">
+                <div>
+                  <dt><svg class="icon contact-detail__icon" aria-hidden="true"><use href="#icon-mail"/></svg> Customer service</dt>
+                  <dd><a href="mailto:support@redstore.com">support@redstore.com</a></dd>
+                </div>
+                <div>
+                  <dt><svg class="icon contact-detail__icon" aria-hidden="true"><use href="#icon-clock"/></svg> Operating hours</dt>
+                  <dd>Monday&ndash;Friday, 9:00&ndash;18:00</dd>
+                </div>
+                <div>
+                  <dt><svg class="icon contact-detail__icon" aria-hidden="true"><use href="#icon-reply"/></svg> Response time</dt>
+                  <dd>Within 24 hours on business days</dd>
+                </div>
+              </dl>
+            </section>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ---------- Footer ---------- -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="site-footer__grid">
+        <section class="footer-app" aria-labelledby="app-title">
+          <h2 id="app-title">Download Our App</h2>
+          <p>Download the app for Android and iOS mobile phones.</p>
+          <div class="footer-app__badges">
+            <a href="#"><img src="../assets/images/badges/google-play.png" alt="Get it on Google Play" width="140" height="42" loading="lazy" decoding="async"></a>
+            <a href="#"><img src="../assets/images/badges/app-store.png" alt="Download on the App Store" width="140" height="42" loading="lazy" decoding="async"></a>
+          </div>
+        </section>
+
+        <section class="footer-about" id="about" aria-labelledby="about-footer-title">
+          <img src="../assets/images/logo/logo-white.png" alt="RedStore" width="180" height="53" loading="lazy" decoding="async">
+          <h2 id="about-footer-title" class="visually-hidden">About RedStore</h2>
+          <p>Our purpose is to sustainably make the pleasure and benefits of sports accessible to the many.</p>
+        </section>
+
+        <nav class="footer-links" aria-labelledby="links-title">
+          <h2 id="links-title">Useful Links</h2>
+          <ul>
+            <li><a href="#">Coupons</a></li>
+            <li><a href="#">Blog Posts</a></li>
+            <li><a href="#">Return Policy</a></li>
+            <li><a href="#">Join Affiliate</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-links" aria-labelledby="social-title">
+          <h2 id="social-title">Follow Us</h2>
+          <ul>
+            <li><a href="#" rel="noopener">Facebook</a></li>
+            <li><a href="#" rel="noopener">Twitter</a></li>
+            <li><a href="#" rel="noopener">Instagram</a></li>
+            <li><a href="#" rel="noopener">YouTube</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <hr>
+      <p class="copyright">&copy; <span id="year">2026</span> RedStore &vert; Ecommerce &middot; All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -9,6 +9,7 @@ A responsive static storefront built with semantic HTML, modern CSS, and vanilla
 - `pages/about.html` — the RedStore story, values, and a call to action.
 - `pages/account.html` — login and registration forms with tab switching.
 - `pages/cart.html` — shopping cart with item quantities and an order summary.
+- `pages/contact.html` — contact form, self-service links, and support details.
 
 ## Run it
 
@@ -32,6 +33,7 @@ redstore-website/
 │   ├── about.html          # about page
 │   ├── account.html        # login and registration
 │   ├── cart.html           # shopping cart
+│   ├── contact.html        # contact form and support details
 │   └── products.html       # products listing page
 ├── assets/
 │   ├── css/
@@ -43,11 +45,13 @@ redstore-website/
 │   │       ├── about.css   # about-page-only styles
 │   │       ├── account.css # account-page-only styles
 │   │       ├── cart.css    # cart-page-only styles
+│   │       ├── contact.css # contact-page-only styles
 │   │       ├── home.css    # homepage-only styles
 │   │       └── products.css # products-page-only styles
 │   ├── js/
 │   │   ├── navigation.js   # mobile menu toggle, footer year
-│   │   └── account-auth.js # login/register tab switching
+│   │   ├── account-auth.js # login/register tab switching
+│   │   └── contact-form.js # contact form validation and mock submit
 │   └── images/
 │       ├── badges/     ├── bought/     ├── brands/
 │       ├── categories/ ├── hero/       ├── icons/
