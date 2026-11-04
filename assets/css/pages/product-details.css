@@ -1,0 +1,169 @@
+/* ==========================================================================
+   RedStore – product details page
+   Page-specific styles layered on top of main.css.
+   ========================================================================== */
+
+/* ---------- Product details ---------- */
+.product-detail {
+  padding-top: 5rem;
+}
+
+.product-detail__container {
+  max-width: 1080px;
+}
+
+.product-detail__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.product-gallery,
+.product-info {
+  flex-basis: 50%;
+  min-width: min(300px, 100%);
+  padding: 20px;
+}
+
+/* ---------- Gallery ---------- */
+.product-gallery__main {
+  width: 100%;
+}
+
+.product-gallery__thumbs {
+  display: flex;
+  justify-content: space-between;
+}
+
+.product-gallery__thumb {
+  flex: 0 0 24%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.product-gallery__thumb img {
+  width: 100%;
+}
+
+/* ---------- Product information ---------- */
+.breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0;
+  list-style: none;
+  color: var(--color-text-muted);
+}
+
+.breadcrumb li + li::before {
+  content: "/";
+  margin-inline: 0.35rem;
+}
+
+.breadcrumb a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.product-info__title {
+  margin-block: 25px;
+  font-size: 50px;
+  line-height: 60px;
+  color: var(--color-text);
+}
+
+.product-info__price {
+  margin-block: 20px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
+.product-info__select {
+  display: block;
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid var(--color-brand);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font: inherit;
+  cursor: pointer;
+}
+
+.product-info__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.product-info__qty {
+  width: 50px;
+  height: 40px;
+  padding-left: 10px;
+  border: 1px solid var(--color-brand);
+  font: inherit;
+  font-size: 20px;
+}
+
+.product-info__add {
+  margin-block: 30px;
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.product-info__details-title {
+  margin-block: 1.5rem 0.75rem;
+  font-size: 1.17em;
+  color: var(--color-text-muted);
+}
+
+/* ---------- Related products ---------- */
+.related-products {
+  padding-bottom: var(--space-section);
+}
+
+.related-products__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 100px auto 50px;
+}
+
+.related-products__header h2 {
+  font-size: 1.5em;
+  color: var(--color-text-muted);
+}
+
+.related-products__header a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.related-products__header a:hover {
+  color: var(--color-brand);
+  text-decoration: underline;
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 600px) {
+  .product-gallery,
+  .product-info {
+    flex-basis: 100%;
+    padding: 20px 0;
+  }
+
+  .product-info__title {
+    font-size: 26px;
+    line-height: 32px;
+  }
+}

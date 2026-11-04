@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details | RedStore</title>
+  <meta name="description" content="View the HRX printed T-shirt, choose your size and quantity, and add it to your RedStore cart.">
+  <meta name="theme-color" content="#ff523b">
+
+  <meta property="og:type" content="product">
+  <meta property="og:title" content="Product Details | RedStore">
+  <meta property="og:description" content="Shop the HRX printed T-shirt and explore more sportswear at RedStore.">
+  <meta property="og:image" content="../assets/images/product-details-images/gallery-1.jpg">
+
+  <link rel="icon" href="../assets/images/icons/favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/pages/product-details.css">
+  <script src="../assets/js/navigation.js" defer></script>
+  <script src="../assets/js/product-gallery.js" defer></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="logo" href="../index.html" aria-label="RedStore home">
+        <img src="../assets/images/logo/logo.png" alt="RedStore" width="125" height="36">
+      </a>
+
+      <nav class="nav" aria-label="Main">
+        <ul class="nav__list" id="nav-list">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="products.html">Products</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="account.html">Account</a></li>
+        </ul>
+      </nav>
+
+      <a class="cart-link" href="cart.html" aria-label="Shopping cart">
+        <img src="../assets/images/icons/cart.png" alt="Shopping cart" width="30" height="30">
+      </a>
+
+      <button class="nav-toggle" type="button" aria-controls="nav-list" aria-expanded="false" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false">
+          <path class="nav-toggle__bars" d="M3 6h18M3 12h18M3 18h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ---------- Product details ---------- -->
+    <section class="product-detail" aria-labelledby="product-title">
+      <div class="container product-detail__container">
+        <div class="product-detail__inner">
+          <div class="product-gallery">
+            <img class="product-gallery__main" id="product-image" src="../assets/images/product-details-images/gallery-1.jpg" alt="HRX printed T-shirt, front view" width="600" height="600" fetchpriority="high">
+
+            <div class="product-gallery__thumbs" role="group" aria-label="Product image thumbnails">
+              <button class="product-gallery__thumb" type="button" aria-controls="product-image" aria-pressed="true" aria-label="Show image 1: front view">
+                <img src="../assets/images/product-details-images/gallery-1.jpg" alt="HRX printed T-shirt, front view" width="600" height="600" loading="lazy" decoding="async">
+              </button>
+
+              <button class="product-gallery__thumb" type="button" aria-controls="product-image" aria-pressed="false" aria-label="Show image 2: back view">
+                <img src="../assets/images/product-details-images/gallery-2.jpg" alt="HRX printed T-shirt, back view" width="600" height="600" loading="lazy" decoding="async">
+              </button>
+
+              <button class="product-gallery__thumb" type="button" aria-controls="product-image" aria-pressed="false" aria-label="Show image 3: side view">
+                <img src="../assets/images/product-details-images/gallery-3.jpg" alt="HRX printed T-shirt, side view" width="600" height="600" loading="lazy" decoding="async">
+              </button>
+
+              <button class="product-gallery__thumb" type="button" aria-controls="product-image" aria-pressed="false" aria-label="Show image 4: detail view">
+                <img src="../assets/images/product-details-images/gallery-4.jpg" alt="HRX printed T-shirt, detail view" width="600" height="600" loading="lazy" decoding="async">
+              </button>
+            </div>
+          </div>
+
+          <div class="product-info">
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+              <ol>
+                <li><a href="../index.html">Home</a></li>
+                <li aria-current="page">T-shirt</li>
+              </ol>
+            </nav>
+
+            <h1 id="product-title" class="product-info__title">Product Printed T-shirt by HRX</h1>
+            <p class="product-info__price">$50.00</p>
+
+            <label class="visually-hidden" for="product-size">Select size</label>
+            <select class="product-info__select" id="product-size" name="size">
+              <option value="">Select Size</option>
+              <option value="xxl">XXL</option>
+              <option value="xl">XL</option>
+              <option value="large">Large</option>
+              <option value="medium">Medium</option>
+              <option value="small">Small</option>
+            </select>
+
+            <div class="product-info__actions">
+              <label class="visually-hidden" for="product-quantity">Quantity</label>
+              <input class="product-info__qty" id="product-quantity" name="quantity" type="number" value="1" min="1" inputmode="numeric">
+
+              <button class="btn product-info__add" type="button">Add To Cart</button>
+            </div>
+
+            <h2 class="product-info__details-title">Product details</h2>
+            <p>Give your Summer wardrobe a style upgrade with the HRX Men's Active T-shirt. Team it with a pair of shorts for your morning workout or denims for an evening out with the guys.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- Related products ---------- -->
+    <section class="related-products" aria-labelledby="related-title">
+      <div class="container product-detail__container">
+        <div class="related-products__header">
+          <h2 id="related-title">Related Product</h2>
+          <a href="products.html">View More &rarr;</a>
+        </div>
+
+        <ul class="grid grid--products">
+          <li>
+            <article class="product-card">
+              <a class="product-card__link" href="#">
+                <img src="../assets/images/products/product-9.webp" alt="Black wristwatch with a leather strap and yellow numerals" width="540" height="720" loading="lazy" decoding="async">
+                <h3 class="product-card__name">Red Printed T-Shirt</h3>
+              </a>
+              <p class="product-card__price">$50.00</p>
+            </article>
+          </li>
+
+          <li>
+            <article class="product-card">
+              <a class="product-card__link" href="#">
+                <img src="../assets/images/products/product-10.webp" alt="Pair of black running shoes with a red camouflage sole" width="540" height="720" loading="lazy" decoding="async">
+                <h3 class="product-card__name">Red Printed T-Shirt</h3>
+              </a>
+              <p class="product-card__price">$50.00</p>
+            </article>
+          </li>
+
+          <li>
+            <article class="product-card">
+              <a class="product-card__link" href="#">
+                <img src="../assets/images/products/product-11.webp" alt="Pair of grey slip-on sneakers with white soles" width="540" height="720" loading="lazy" decoding="async">
+                <h3 class="product-card__name">Red Printed T-Shirt</h3>
+              </a>
+              <p class="product-card__price">$50.00</p>
+            </article>
+          </li>
+
+          <li>
+            <article class="product-card">
+              <a class="product-card__link" href="#">
+                <img src="../assets/images/products/product-12.webp" alt="Person wearing black joggers and white sneakers" width="540" height="720" loading="lazy" decoding="async">
+                <h3 class="product-card__name">Red Printed T-Shirt</h3>
+              </a>
+              <p class="product-card__price">$50.00</p>
+            </article>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <!-- ---------- Footer ---------- -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="site-footer__grid">
+        <section class="footer-app" aria-labelledby="app-title">
+          <h2 id="app-title">Download Our App</h2>
+          <p>Download the app for Android and iOS mobile phones.</p>
+          <div class="footer-app__badges">
+            <a href="#"><img src="../assets/images/badges/google-play.png" alt="Get it on Google Play" width="140" height="42" loading="lazy" decoding="async"></a>
+            <a href="#"><img src="../assets/images/badges/app-store.png" alt="Download on the App Store" width="140" height="42" loading="lazy" decoding="async"></a>
+          </div>
+        </section>
+
+        <section class="footer-about" id="about" aria-labelledby="about-title">
+          <img src="../assets/images/logo/logo-white.png" alt="RedStore" width="180" height="53" loading="lazy" decoding="async">
+          <h2 id="about-title" class="visually-hidden">About RedStore</h2>
+          <p>Our purpose is to sustainably make the pleasure and benefits of sports accessible to the many.</p>
+        </section>
+
+        <nav class="footer-links" aria-labelledby="links-title">
+          <h2 id="links-title">Useful Links</h2>
+          <ul>
+            <li><a href="#">Coupons</a></li>
+            <li><a href="#">Blog Posts</a></li>
+            <li><a href="#">Return Policy</a></li>
+            <li><a href="#">Join Affiliate</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-links" aria-labelledby="social-title">
+          <h2 id="social-title">Follow Us</h2>
+          <ul>
+            <li><a href="#" rel="noopener">Facebook</a></li>
+            <li><a href="#" rel="noopener">Twitter</a></li>
+            <li><a href="#" rel="noopener">Instagram</a></li>
+            <li><a href="#" rel="noopener">YouTube</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <hr>
+      <p class="copyright">&copy; <span id="year">2026</span> RedStore &vert; Ecommerce &middot; All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>
