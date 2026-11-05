@@ -1,12 +1,23 @@
-version: '3.9'
-
 services:
   web:
-    image: php:apache
+    build: .
     container_name: redstore-web
     ports:
       - "8080:80"
     volumes:
       - ./:/var/www/html
-    working_dir: /var/www/html
+    environment:
+      PORT: "80"
+      APP_ENV: ${APP_ENV:-development}
+      DATABASE_URL: ${DATABASE_URL:-}
+      DB_HOST: ${DB_HOST:-}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_NAME: ${DB_NAME:-postgres}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-}
+      DB_SSLMODE: ${DB_SSLMODE:-require}
+      SUPABASE_URL: ${SUPABASE_URL:-}
+      SUPABASE_STORAGE_BUCKET: ${SUPABASE_STORAGE_BUCKET:-product-images}
+      SUPABASE_STORAGE_PUBLIC_URL: ${SUPABASE_STORAGE_PUBLIC_URL:-}
+      CORS_ALLOWED_ORIGIN: ${CORS_ALLOWED_ORIGIN:-}
     restart: unless-stopped

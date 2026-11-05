@@ -1,0 +1,13 @@
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+node_modules
+npm-debug.log*
+logs
+*.log
+.DS_Store
+.vscode
+.idea
+tests

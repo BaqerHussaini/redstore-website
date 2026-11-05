@@ -1,0 +1,15 @@
+Options -Indexes
+DirectoryIndex index.html index.php
+
+# Never serve dotfiles such as .env or .git.
+<FilesMatch "^\.">
+  Require all denied
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Backend source, SQL files and tooling are not public assets.
+  RewriteRule ^(database|scripts|docker|api/(config|controllers|models|routes|lib))(/|$) - [F,L]
+  RewriteRule ^(Dockerfile|docker-compose\.yml|render\.yaml|server\.php)$ - [F,L]
+</IfModule>

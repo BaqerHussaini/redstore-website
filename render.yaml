@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: redstore-website
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DB_SSLMODE
+        value: require
+      - key: SUPABASE_STORAGE_BUCKET
+        value: product-images
+      # Set these in the Render dashboard (marked as secret, not committed).
+      - key: DATABASE_URL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: CORS_ALLOWED_ORIGIN
+        sync: false
