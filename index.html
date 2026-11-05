@@ -21,6 +21,9 @@
   <link rel="stylesheet" href="assets/css/main.css">
   <link rel="stylesheet" href="assets/css/pages/home.css">
   <script src="assets/js/navigation.js" defer></script>
+  <script src="assets/js/api.js" defer></script>
+  <script src="assets/js/products-ui.js" defer></script>
+  <script src="assets/js/home-products.js" defer></script>
 </head>
 
 <body>
@@ -106,131 +109,13 @@
     <section class="section" id="products" aria-labelledby="featured-title">
       <div class="container container--narrow">
         <h2 id="featured-title" class="section-title">Featured Products</h2>
-        <ul class="grid grid--products">
-          <li>
-            <article class="product-card">
-              <a class="product-card__link" href="pages/product-details.html">
-                <img src="assets/images/products/product-1.webp" alt="Man wearing a red graphic t-shirt" width="540" height="720" loading="lazy" decoding="async">
-                <h3 class="product-card__name">Red Graphic T-Shirt</h3>
-              </a>
-              <p class="rating" role="img" aria-label="Rated 4 out of 5"><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-empty"/></svg></p>
-              <p class="product-card__price">$29.00</p>
-            </article>
-          </li>
-          <li>
-            <article class="product-card">
-              <a class="product-card__link" href="#">
-                <img src="assets/images/products/product-2.webp" alt="Pair of black running shoes with white soles" width="540" height="720" loading="lazy" decoding="async">
-                <h3 class="product-card__name">Black Running Shoes</h3>
-              </a>
-              <p class="rating" role="img" aria-label="Rated 3.5 out of 5"><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-half"/></svg><svg class="icon" aria-hidden="true"><use href="#star-empty"/></svg></p>
-              <p class="product-card__price">$64.00</p>
-            </article>
-          </li>
-          <li>
-            <article class="product-card">
-              <a class="product-card__link" href="#">
-                <img src="assets/images/products/product-3.webp" alt="Person wearing charcoal slim-fit track pants" width="540" height="720" loading="lazy" decoding="async">
-                <h3 class="product-card__name">Charcoal Slim Track Pants</h3>
-              </a>
-              <p class="rating" role="img" aria-label="Rated 4.5 out of 5"><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-half"/></svg></p>
-              <p class="product-card__price">$45.00</p>
-            </article>
-          </li>
-          <li>
-            <article class="product-card">
-              <a class="product-card__link" href="#">
-                <img src="assets/images/products/product-4.webp" alt="Man wearing a navy polo t-shirt" width="540" height="720" loading="lazy" decoding="async">
-                <h3 class="product-card__name">Navy Polo T-Shirt</h3>
-              </a>
-              <p class="rating" role="img" aria-label="Rated 4 out of 5"><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-empty"/></svg></p>
-              <p class="product-card__price">$35.00</p>
-            </article>
-          </li>
+        <ul class="grid grid--products" id="featured-products" aria-busy="true">
+          <li class="products-status" role="status">Loading products…</li>
         </ul>
 
         <h2 class="section-title">Latest Products</h2>
-        <ul class="grid grid--products">
-          <li>
-            <article class="product-card">
-              <a class="product-card__link" href="#">
-                <img src="assets/images/products/product-5.webp" alt="Pair of grey high-top sneakers" width="540" height="720" loading="lazy" decoding="async">
-                <h3 class="product-card__name">Grey High-Top Sneakers</h3>
-              </a>
-              <p class="rating" role="img" aria-label="Rated 4 out of 5"><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-empty"/></svg></p>
-              <p class="product-card__price">$72.00</p>
-            </article>
-          </li>
-          <li>
-            <article class="product-card">
-              <a class="product-card__link" href="#">
-                <img src="assets/images/products/product-6.webp" alt="Man wearing a black t-shirt with a chevron stripe print" width="540" height="720" loading="lazy" decoding="async">
-                <h3 class="product-card__name">Black Chevron T-Shirt</h3>
-              </a>
-              <p class="rating" role="img" aria-label="Rated 3.5 out of 5"><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-half"/></svg><svg class="icon" aria-hidden="true"><use href="#star-empty"/></svg></p>
-              <p class="product-card__price">$32.00</p>
-            </article>
-          </li>
-          <li>
-            <article class="product-card">
-              <a class="product-card__link" href="#">
-                <img src="assets/images/products/product-7.webp" alt="Three pairs of crew socks in black, white and grey" width="540" height="720" loading="lazy" decoding="async">
-                <h3 class="product-card__name">Crew Socks, 3-Pack</h3>
-              </a>
-              <p class="rating" role="img" aria-label="Rated 4.5 out of 5"><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-half"/></svg></p>
-              <p class="product-card__price">$12.00</p>
-            </article>
-          </li>
-          <li>
-            <article class="product-card">
-              <a class="product-card__link" href="#">
-                <img src="assets/images/products/product-8.webp" alt="Black stainless steel wristwatch with a black dial" width="540" height="720" loading="lazy" decoding="async">
-                <h3 class="product-card__name">Black Steel Watch</h3>
-              </a>
-              <p class="rating" role="img" aria-label="Rated 4 out of 5"><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-empty"/></svg></p>
-              <p class="product-card__price">$120.00</p>
-            </article>
-          </li>
-          <li>
-            <article class="product-card">
-              <a class="product-card__link" href="#">
-                <img src="assets/images/products/product-9.webp" alt="Black wristwatch with a leather strap and yellow numerals" width="540" height="720" loading="lazy" decoding="async">
-                <h3 class="product-card__name">Black Leather-Strap Watch</h3>
-              </a>
-              <p class="rating" role="img" aria-label="Rated 4 out of 5"><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-empty"/></svg></p>
-              <p class="product-card__price">$95.00</p>
-            </article>
-          </li>
-          <li>
-            <article class="product-card">
-              <a class="product-card__link" href="#">
-                <img src="assets/images/products/product-10.webp" alt="Pair of black running shoes with a red camouflage sole" width="540" height="720" loading="lazy" decoding="async">
-                <h3 class="product-card__name">Black & Red Trail Shoes</h3>
-              </a>
-              <p class="rating" role="img" aria-label="Rated 3.5 out of 5"><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-half"/></svg><svg class="icon" aria-hidden="true"><use href="#star-empty"/></svg></p>
-              <p class="product-card__price">$68.00</p>
-            </article>
-          </li>
-          <li>
-            <article class="product-card">
-              <a class="product-card__link" href="#">
-                <img src="assets/images/products/product-11.webp" alt="Pair of grey slip-on sneakers with white soles" width="540" height="720" loading="lazy" decoding="async">
-                <h3 class="product-card__name">Grey Slip-On Sneakers</h3>
-              </a>
-              <p class="rating" role="img" aria-label="Rated 4.5 out of 5"><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-half"/></svg></p>
-              <p class="product-card__price">$58.00</p>
-            </article>
-          </li>
-          <li>
-            <article class="product-card">
-              <a class="product-card__link" href="#">
-                <img src="assets/images/products/product-12.webp" alt="Person wearing black joggers and white sneakers" width="540" height="720" loading="lazy" decoding="async">
-                <h3 class="product-card__name">Black Cuffed Joggers</h3>
-              </a>
-              <p class="rating" role="img" aria-label="Rated 4 out of 5"><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-empty"/></svg></p>
-              <p class="product-card__price">$42.00</p>
-            </article>
-          </li>
+        <ul class="grid grid--products" id="latest-products" aria-busy="true">
+          <li class="products-status" role="status">Loading products…</li>
         </ul>
       </div>
     </section>

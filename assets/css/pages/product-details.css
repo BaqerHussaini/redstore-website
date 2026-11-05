@@ -85,6 +85,44 @@
   color: var(--color-text-muted);
 }
 
+.product-info__price--sale {
+  color: var(--color-brand-strong);
+}
+
+.product-info__price s {
+  margin-left: 0.5rem;
+  color: var(--color-text-subtle);
+  font-size: 0.7em;
+  font-weight: 400;
+}
+
+.product-info__stock {
+  margin-top: 0.75rem;
+  color: var(--color-text-subtle);
+  font-size: 0.9rem;
+}
+
+.product-info__stock--out {
+  color: var(--color-brand-strong);
+  font-weight: 600;
+}
+
+.product-status {
+  padding: 4rem 1rem;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.product-status a {
+  color: var(--color-brand-strong);
+}
+
+.product-status__title {
+  margin-bottom: 0.5rem;
+  font-size: 1.4rem;
+  color: var(--color-text);
+}
+
 .product-info__select {
   display: block;
   margin-top: 20px;

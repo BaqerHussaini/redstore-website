@@ -20,6 +20,9 @@
   <link rel="stylesheet" href="../assets/css/main.css">
   <link rel="stylesheet" href="../assets/css/pages/products.css">
   <script src="../assets/js/navigation.js" defer></script>
+  <script src="../assets/js/api.js" defer></script>
+  <script src="../assets/js/products-ui.js" defer></script>
+  <script src="../assets/js/products-page.js" defer></script>
 </head>
 
 <body>
@@ -67,149 +70,40 @@
         <div class="products-toolbar">
           <h1 id="products-title" class="products-toolbar__title">All Products</h1>
 
-          <div class="sort">
-            <label class="visually-hidden" for="sort">Sort products</label>
-            <select id="sort" name="sort">
-              <option>Default Sorting</option>
-              <option>Sort by Price</option>
-              <option>Sort by Popularity</option>
-              <option>Sort by Rating</option>
-              <option>Sort by Sale</option>
+          <form class="products-filters" id="products-filters" role="search">
+            <label class="visually-hidden" for="product-search">Search products</label>
+            <input id="product-search" name="search" type="search" placeholder="Search products…" autocomplete="off" maxlength="100">
+
+            <label class="visually-hidden" for="category-filter">Filter by category</label>
+            <select id="category-filter" name="category">
+              <option value="">All Categories</option>
             </select>
-          </div>
+
+            <label class="visually-hidden" for="sort">Sort products</label>
+            <div class="sort">
+              <select id="sort" name="sort">
+                <option value="default">Default Sorting</option>
+                <option value="newest">Newest</option>
+                <option value="price_asc">Price: Low to High</option>
+                <option value="price_desc">Price: High to Low</option>
+                <option value="name_asc">Name: A–Z</option>
+                <option value="name_desc">Name: Z–A</option>
+                <option value="featured">Featured</option>
+              </select>
+            </div>
+
+            <button class="products-filters__submit" type="submit">Search</button>
+          </form>
         </div>
 
-        <ul class="grid grid--products">
-          <li>
-            <article class="product-card">
-              <a class="product-card__link" href="product-details.html">
-                <img src="../assets/images/products/product-1.webp" alt="Man wearing a red graphic t-shirt" width="540" height="720" loading="lazy" decoding="async">
-                <h2 class="product-card__name">Red Graphic T-Shirt</h2>
-              </a>
-              <p class="rating" role="img" aria-label="Rated 4 out of 5"><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-empty"/></svg></p>
-              <p class="product-card__price">$29.00</p>
-            </article>
-          </li>
-          <li>
-            <article class="product-card">
-              <a class="product-card__link" href="#">
-                <img src="../assets/images/products/product-2.webp" alt="Pair of black running shoes with white soles" width="540" height="720" loading="lazy" decoding="async">
-                <h2 class="product-card__name">Black Running Shoes</h2>
-              </a>
-              <p class="rating" role="img" aria-label="Rated 3.5 out of 5"><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-half"/></svg><svg class="icon" aria-hidden="true"><use href="#star-empty"/></svg></p>
-              <p class="product-card__price">$64.00</p>
-            </article>
-          </li>
-          <li>
-            <article class="product-card">
-              <a class="product-card__link" href="#">
-                <img src="../assets/images/products/product-3.webp" alt="Person wearing charcoal slim-fit track pants" width="540" height="720" loading="lazy" decoding="async">
-                <h2 class="product-card__name">Charcoal Slim Track Pants</h2>
-              </a>
-              <p class="rating" role="img" aria-label="Rated 4.5 out of 5"><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-half"/></svg></p>
-              <p class="product-card__price">$45.00</p>
-            </article>
-          </li>
-          <li>
-            <article class="product-card">
-              <a class="product-card__link" href="#">
-                <img src="../assets/images/products/product-4.webp" alt="Man wearing a navy polo t-shirt" width="540" height="720" loading="lazy" decoding="async">
-                <h2 class="product-card__name">Navy Polo T-Shirt</h2>
-              </a>
-              <p class="rating" role="img" aria-label="Rated 4 out of 5"><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-empty"/></svg></p>
-              <p class="product-card__price">$35.00</p>
-            </article>
-          </li>
-          <li>
-            <article class="product-card">
-              <a class="product-card__link" href="#">
-                <img src="../assets/images/products/product-5.webp" alt="Pair of grey high-top sneakers" width="540" height="720" loading="lazy" decoding="async">
-                <h2 class="product-card__name">Grey High-Top Sneakers</h2>
-              </a>
-              <p class="rating" role="img" aria-label="Rated 4 out of 5"><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-empty"/></svg></p>
-              <p class="product-card__price">$72.00</p>
-            </article>
-          </li>
-          <li>
-            <article class="product-card">
-              <a class="product-card__link" href="#">
-                <img src="../assets/images/products/product-6.webp" alt="Man wearing a black t-shirt with a chevron stripe print" width="540" height="720" loading="lazy" decoding="async">
-                <h2 class="product-card__name">Black Chevron T-Shirt</h2>
-              </a>
-              <p class="rating" role="img" aria-label="Rated 3.5 out of 5"><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-half"/></svg><svg class="icon" aria-hidden="true"><use href="#star-empty"/></svg></p>
-              <p class="product-card__price">$32.00</p>
-            </article>
-          </li>
-          <li>
-            <article class="product-card">
-              <a class="product-card__link" href="#">
-                <img src="../assets/images/products/product-7.webp" alt="Three pairs of crew socks in black, white and grey" width="540" height="720" loading="lazy" decoding="async">
-                <h2 class="product-card__name">Crew Socks, 3-Pack</h2>
-              </a>
-              <p class="rating" role="img" aria-label="Rated 4.5 out of 5"><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-half"/></svg></p>
-              <p class="product-card__price">$12.00</p>
-            </article>
-          </li>
-          <li>
-            <article class="product-card">
-              <a class="product-card__link" href="#">
-                <img src="../assets/images/products/product-8.webp" alt="Black stainless steel wristwatch with a black dial" width="540" height="720" loading="lazy" decoding="async">
-                <h2 class="product-card__name">Black Steel Watch</h2>
-              </a>
-              <p class="rating" role="img" aria-label="Rated 4 out of 5"><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-empty"/></svg></p>
-              <p class="product-card__price">$120.00</p>
-            </article>
-          </li>
-          <li>
-            <article class="product-card">
-              <a class="product-card__link" href="#">
-                <img src="../assets/images/products/product-9.webp" alt="Black wristwatch with a leather strap and yellow numerals" width="540" height="720" loading="lazy" decoding="async">
-                <h2 class="product-card__name">Black Leather-Strap Watch</h2>
-              </a>
-              <p class="rating" role="img" aria-label="Rated 4 out of 5"><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-empty"/></svg></p>
-              <p class="product-card__price">$95.00</p>
-            </article>
-          </li>
-          <li>
-            <article class="product-card">
-              <a class="product-card__link" href="#">
-                <img src="../assets/images/products/product-10.webp" alt="Pair of black running shoes with a red camouflage sole" width="540" height="720" loading="lazy" decoding="async">
-                <h2 class="product-card__name">Black &amp; Red Trail Shoes</h2>
-              </a>
-              <p class="rating" role="img" aria-label="Rated 3.5 out of 5"><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-half"/></svg><svg class="icon" aria-hidden="true"><use href="#star-empty"/></svg></p>
-              <p class="product-card__price">$68.00</p>
-            </article>
-          </li>
-          <li>
-            <article class="product-card">
-              <a class="product-card__link" href="#">
-                <img src="../assets/images/products/product-11.webp" alt="Pair of grey slip-on sneakers with white soles" width="540" height="720" loading="lazy" decoding="async">
-                <h2 class="product-card__name">Grey Slip-On Sneakers</h2>
-              </a>
-              <p class="rating" role="img" aria-label="Rated 4.5 out of 5"><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-half"/></svg></p>
-              <p class="product-card__price">$58.00</p>
-            </article>
-          </li>
-          <li>
-            <article class="product-card">
-              <a class="product-card__link" href="#">
-                <img src="../assets/images/products/product-12.webp" alt="Person wearing black joggers and white sneakers" width="540" height="720" loading="lazy" decoding="async">
-                <h2 class="product-card__name">Black Cuffed Joggers</h2>
-              </a>
-              <p class="rating" role="img" aria-label="Rated 4 out of 5"><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-full"/></svg><svg class="icon" aria-hidden="true"><use href="#star-empty"/></svg></p>
-              <p class="product-card__price">$42.00</p>
-            </article>
-          </li>
+        <p class="products-summary" id="products-summary" aria-live="polite"></p>
+
+        <ul class="grid grid--products" id="products-grid" aria-busy="true">
+          <li class="products-status" role="status">Loading products…</li>
         </ul>
 
-        <nav class="pagination" aria-label="Product pages">
-          <ul>
-            <li><a href="#" aria-current="page">1</a></li>
-            <li><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a href="#">4</a></li>
-            <li><a href="#" aria-label="Next page"><span aria-hidden="true">&rarr;</span></a></li>
-          </ul>
+        <nav class="pagination" id="pagination" aria-label="Product pages" hidden>
+          <ul></ul>
         </nav>
       </div>
     </section>

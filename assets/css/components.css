@@ -91,6 +91,51 @@
   font-weight: 500;
 }
 
+.product-card__price--sale {
+  color: var(--color-brand-strong);
+}
+
+.product-card__price-was {
+  margin-left: 0.35rem;
+  color: var(--color-text-subtle);
+  font-size: 0.85em;
+  font-weight: 400;
+}
+
+.product-card__stock {
+  margin-top: 0.15rem;
+  color: var(--color-text-subtle);
+  font-size: 0.8rem;
+}
+
+/* Shared loading / empty / error state used by JS-rendered product grids. */
+.products-status {
+  grid-column: 1 / -1;
+  padding: 2rem 1rem;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.products-status__retry {
+  margin-top: 0.75rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-brand);
+  border-radius: 6px;
+  background: var(--color-surface);
+  color: var(--color-brand-strong);
+  font: inherit;
+  cursor: pointer;
+}
+
+.products-status__retry:hover {
+  background: var(--color-brand);
+  color: #fff;
+}
+
+[hidden] {
+  display: none !important;
+}
+
 /* ---------- Site header & navigation ---------- */
 .site-header {
   position: sticky;

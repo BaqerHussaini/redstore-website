@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="540" height="720" viewBox="0 0 540 720" role="img" aria-label="Product image unavailable">
+  <rect width="540" height="720" fill="#f1f1f1"/>
+  <g fill="none" stroke="#ff523b" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M190 285h160l22 170H168z"/>
+    <path d="M220 285v-28a50 50 0 0 1 100 0v28"/>
+  </g>
+  <text x="270" y="540" text-anchor="middle" font-family="Poppins, Arial, sans-serif" font-size="28" font-weight="600" fill="#555">RedStore</text>
+  <text x="270" y="578" text-anchor="middle" font-family="Poppins, Arial, sans-serif" font-size="18" fill="#888">Image unavailable</text>
+</svg>

@@ -20,7 +20,10 @@
   <link rel="stylesheet" href="../assets/css/main.css">
   <link rel="stylesheet" href="../assets/css/pages/product-details.css">
   <script src="../assets/js/navigation.js" defer></script>
+  <script src="../assets/js/api.js" defer></script>
+  <script src="../assets/js/products-ui.js" defer></script>
   <script src="../assets/js/product-gallery.js" defer></script>
+  <script src="../assets/js/product-details.js" defer></script>
 </head>
 
 <body>
@@ -58,49 +61,29 @@
     <!-- ---------- Product details ---------- -->
     <section class="product-detail" aria-labelledby="product-title">
       <div class="container product-detail__container">
-        <div class="product-detail__inner">
+        <div class="product-status" id="product-status" role="status">Loading product…</div>
+
+        <div class="product-detail__inner" hidden>
           <div class="product-gallery">
-            <img class="product-gallery__main" id="product-image" src="../assets/images/product-details-images/gallery-1.jpg" alt="HRX printed T-shirt, front view" width="600" height="600" fetchpriority="high">
+            <img class="product-gallery__main" id="product-image" src="../assets/images/products/placeholder.svg" alt="Product image" width="600" height="600" fetchpriority="high">
 
-            <div class="product-gallery__thumbs" role="group" aria-label="Product image thumbnails">
-              <button class="product-gallery__thumb" type="button" aria-controls="product-image" aria-pressed="true" aria-label="Show image 1: front view">
-                <img src="../assets/images/product-details-images/gallery-1.jpg" alt="HRX printed T-shirt, front view" width="600" height="600" loading="lazy" decoding="async">
-              </button>
-
-              <button class="product-gallery__thumb" type="button" aria-controls="product-image" aria-pressed="false" aria-label="Show image 2: back view">
-                <img src="../assets/images/product-details-images/gallery-2.jpg" alt="HRX printed T-shirt, back view" width="600" height="600" loading="lazy" decoding="async">
-              </button>
-
-              <button class="product-gallery__thumb" type="button" aria-controls="product-image" aria-pressed="false" aria-label="Show image 3: side view">
-                <img src="../assets/images/product-details-images/gallery-3.jpg" alt="HRX printed T-shirt, side view" width="600" height="600" loading="lazy" decoding="async">
-              </button>
-
-              <button class="product-gallery__thumb" type="button" aria-controls="product-image" aria-pressed="false" aria-label="Show image 4: detail view">
-                <img src="../assets/images/product-details-images/gallery-4.jpg" alt="HRX printed T-shirt, detail view" width="600" height="600" loading="lazy" decoding="async">
-              </button>
-            </div>
+            <div class="product-gallery__thumbs" role="group" aria-label="Product image thumbnails"></div>
           </div>
 
           <div class="product-info">
             <nav class="breadcrumb" aria-label="Breadcrumb">
-              <ol>
-                <li><a href="../index.html">Home</a></li>
-                <li aria-current="page">T-shirt</li>
-              </ol>
+              <ol></ol>
             </nav>
 
-            <h1 id="product-title" class="product-info__title">Product Printed T-shirt by HRX</h1>
-            <p class="product-info__price">$50.00</p>
+            <h1 id="product-title" class="product-info__title"></h1>
+            <p class="product-info__price" id="product-price"></p>
 
             <label class="visually-hidden" for="product-size">Select size</label>
-            <select class="product-info__select" id="product-size" name="size">
+            <select class="product-info__select" id="product-size" name="size" hidden>
               <option value="">Select Size</option>
-              <option value="xxl">XXL</option>
-              <option value="xl">XL</option>
-              <option value="large">Large</option>
-              <option value="medium">Medium</option>
-              <option value="small">Small</option>
             </select>
+
+            <p class="product-info__stock" id="product-stock"></p>
 
             <div class="product-info__actions">
               <label class="visually-hidden" for="product-quantity">Quantity</label>
@@ -110,60 +93,22 @@
             </div>
 
             <h2 class="product-info__details-title">Product details</h2>
-            <p>Give your Summer wardrobe a style upgrade with the HRX Men's Active T-shirt. Team it with a pair of shorts for your morning workout or denims for an evening out with the guys.</p>
+            <p id="product-description"></p>
           </div>
         </div>
       </div>
     </section>
 
     <!-- ---------- Related products ---------- -->
-    <section class="related-products" aria-labelledby="related-title">
+    <section class="related-products" aria-labelledby="related-title" hidden>
       <div class="container product-detail__container">
         <div class="related-products__header">
           <h2 id="related-title">Related Product</h2>
           <a href="products.html">View More &rarr;</a>
         </div>
 
-        <ul class="grid grid--products">
-          <li>
-            <article class="product-card">
-              <a class="product-card__link" href="#">
-                <img src="../assets/images/products/product-9.webp" alt="Black wristwatch with a leather strap and yellow numerals" width="540" height="720" loading="lazy" decoding="async">
-                <h3 class="product-card__name">Red Printed T-Shirt</h3>
-              </a>
-              <p class="product-card__price">$50.00</p>
-            </article>
-          </li>
-
-          <li>
-            <article class="product-card">
-              <a class="product-card__link" href="#">
-                <img src="../assets/images/products/product-10.webp" alt="Pair of black running shoes with a red camouflage sole" width="540" height="720" loading="lazy" decoding="async">
-                <h3 class="product-card__name">Red Printed T-Shirt</h3>
-              </a>
-              <p class="product-card__price">$50.00</p>
-            </article>
-          </li>
-
-          <li>
-            <article class="product-card">
-              <a class="product-card__link" href="#">
-                <img src="../assets/images/products/product-11.webp" alt="Pair of grey slip-on sneakers with white soles" width="540" height="720" loading="lazy" decoding="async">
-                <h3 class="product-card__name">Red Printed T-Shirt</h3>
-              </a>
-              <p class="product-card__price">$50.00</p>
-            </article>
-          </li>
-
-          <li>
-            <article class="product-card">
-              <a class="product-card__link" href="#">
-                <img src="../assets/images/products/product-12.webp" alt="Person wearing black joggers and white sneakers" width="540" height="720" loading="lazy" decoding="async">
-                <h3 class="product-card__name">Red Printed T-Shirt</h3>
-              </a>
-              <p class="product-card__price">$50.00</p>
-            </article>
-          </li>
+        <ul class="grid grid--products" id="related-products">
+          <li class="products-status" role="status">Loading related products…</li>
         </ul>
       </div>
     </section>
