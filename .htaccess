@@ -11,5 +11,6 @@ DirectoryIndex index.html index.php
 
   # Backend source, SQL files and tooling are not public assets.
   RewriteRule ^(database|scripts|docker|api/(config|controllers|models|routes|lib))(/|$) - [F,L]
+  RewriteRule ^admin/(bootstrap\.php|views|lib|models|controllers)(/|$) - [F,L]
   RewriteRule ^(Dockerfile|docker-compose\.yml|render\.yaml|server\.php)$ - [F,L]
 </IfModule>

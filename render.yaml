@@ -13,10 +13,14 @@ services:
         value: require
       - key: SUPABASE_STORAGE_BUCKET
         value: product-images
+      - key: SESSION_COOKIE_SECURE
+        value: "true"
       # Set these in the Render dashboard (marked as secret, not committed).
       - key: DATABASE_URL
         sync: false
       - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
         sync: false
       - key: CORS_ALLOWED_ORIGIN
         sync: false

@@ -15,6 +15,8 @@ RUN a2enmod rewrite \
 COPY docker/entrypoint.sh /usr/local/bin/redstore-entrypoint
 RUN chmod +x /usr/local/bin/redstore-entrypoint
 
+COPY docker/php.ini /usr/local/etc/php/conf.d/redstore-uploads.ini
+
 WORKDIR /var/www/html
 COPY . /var/www/html
 
