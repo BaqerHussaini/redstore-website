@@ -55,6 +55,27 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- ----------------------------------------------------------------------------
+-- Admin login rate limiting
+-- Stores recent successful and failed admin login attempts. Old rows are
+-- pruned by the PHP application; no password or secret is stored here.
+-- ----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS admin_login_attempts (
+  id           bigserial PRIMARY KEY,
+  email        citext NOT NULL,
+  ip_address   inet,
+  user_agent   varchar(255),
+  successful   boolean NOT NULL DEFAULT false,
+  attempted_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_admin_login_attempts_email_time
+  ON admin_login_attempts (email, attempted_at DESC);
+CREATE INDEX IF NOT EXISTS idx_admin_login_attempts_ip_time
+  ON admin_login_attempts (ip_address, attempted_at DESC);
+CREATE INDEX IF NOT EXISTS idx_admin_login_attempts_time
+  ON admin_login_attempts (attempted_at DESC);
+
+-- ----------------------------------------------------------------------------
 -- Categories
 -- Powers the product listing filters, product detail breadcrumb and
 -- related-product grouping.
@@ -518,6 +539,7 @@ ON CONFLICT DO NOTHING;
 -- Add explicit policies later if the admin dashboard needs Supabase Auth.
 -- ----------------------------------------------------------------------------
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE admin_login_attempts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE products ENABLE ROW LEVEL SECURITY;
 ALTER TABLE product_images ENABLE ROW LEVEL SECURITY;
