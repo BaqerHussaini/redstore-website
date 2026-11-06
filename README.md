@@ -5,16 +5,16 @@ original HTML/CSS/vanilla-JavaScript design, but product data now comes from a
 PHP REST API backed by Supabase PostgreSQL. Product images can be served from
 the local `assets/images/` folder or from Supabase Storage.
 
-This phase implements the database, PHP API, dynamic product pages and
-deployment configuration. The admin dashboard, authentication, cart and
-checkout workflows are intentionally **not** part of this phase.
+This phase implements the database, PHP API, dynamic product pages, a secure
+server-rendered admin dashboard, and deployment configuration. Cart persistence,
+checkout and payment integration remain **out of scope**.
 
 ## Architecture
 
 ```text
 Browser (HTML/CSS/vanilla JS)
         |
-        | fetch() /api/*
+        | fetch() /api/*  +  /admin (PHP sessions, CSRF)
         v
 Apache + PHP 8.3 (Render Docker service)
         |
@@ -25,6 +25,7 @@ Supabase PostgreSQL
 Supabase Storage (public bucket: product-images)
         ^
         | public image URLs returned by the PHP API
+        | server-side uploads from the admin dashboard
 ```
 
 - The browser never receives database credentials and never calls Supabase
@@ -46,44 +47,67 @@ Supabase Storage (public bucket: product-images)
 
 ```text
 redstore-website/
+├── admin/
+│   ├── index.php               # server-rendered admin router/controller
+│   ├── bootstrap.php           # admin session + view helpers
+│   ├── views/                  # login, dashboard, products, categories,
+│   │                           # inventory, orders, customers, settings
+│   └── .htaccess               # denies direct access to internals
 ├── api/
 │   ├── config/
 │   │   ├── config.php          # env loading and app config
 │   │   └── database.php        # PDO PostgreSQL connection
 │   ├── controllers/
-│   │   └── ProductController.php
+│   │   ├── ProductController.php
+│   │   ├── AdminDashboardController.php
+│   │   ├── AdminProductController.php
+│   │   ├── AdminCategoryController.php
+│   │   ├── AdminInventoryController.php
+│   │   ├── AdminOrderController.php
+│   │   └── AdminCustomerController.php
 │   ├── lib/
 │   │   ├── ApiException.php
+│   │   ├── Auth.php            # sessions, CSRF, rate limiting, password hashing
+│   │   ├── ImageUploader.php   # MIME/size validation + safe object paths
 │   │   ├── ImageUrl.php        # local/storage image URL resolution
-│   │   └── Response.php        # consistent JSON responses
+│   │   ├── Input.php           # typed request input validation
+│   │   ├── Response.php        # consistent JSON responses
+│   │   └── SupabaseStorage.php # service-role Storage uploads/deletes
 │   ├── models/
 │   │   ├── Category.php
-│   │   └── Product.php
+│   │   ├── Product.php
+│   │   ├── User.php
+│   │   ├── ProductImage.php
+│   │   ├── LoginAttempt.php
+│   │   ├── AdminDashboard.php
+│   │   ├── AdminProduct.php
+│   │   ├── AdminCategory.php
+│   │   ├── AdminInventory.php
+│   │   ├── AdminOrder.php
+│   │   └── AdminCustomer.php
 │   ├── routes/
-│   │   └── products.php
+│   │   ├── products.php
+│   │   └── admin.php
 │   ├── .htaccess               # Apache rewrite to index.php
 │   └── index.php               # API front controller
 ├── assets/
+│   ├── admin/                  # admin.css + admin.js
 │   ├── css/                    # existing design system
 │   ├── images/                 # existing images + placeholder.svg
-│   └── js/
-│       ├── api.js              # shared fetch client
-│       ├── products-ui.js      # safe DOM renderers
-│       ├── home-products.js
-│       ├── products-page.js
-│       ├── product-details.js
-│       ├── product-gallery.js
-│       └── navigation.js
+│   └── js/                     # public storefront scripts
 ├── database/
 │   ├── schema.sql              # fresh Supabase install
 │   └── migrations/
 │       ├── 001_product_features.sql
 │       ├── 002_storage_bucket.sql
 │       ├── 003_migrate_images_to_storage.sql   # optional, after upload
-│       └── 004_enable_rls.sql
+│       ├── 004_enable_rls.sql
+│       └── 005_admin_auth.sql                  # admin login attempts
 ├── docker/
-│   └── entrypoint.sh           # maps Apache to Render's PORT
+│   ├── entrypoint.sh           # maps Apache to Render's PORT
+│   └── php.ini                 # upload limits (5 MB per image)
 ├── scripts/
+│   ├── create-admin.php        # create/reset an administrator
 │   └── upload-product-images.sh
 ├── pages/                      # existing public pages
 ├── Dockerfile
@@ -111,15 +135,28 @@ redstore-website/
    psql "$DATABASE_URL" -f database/schema.sql
    ```
 
-3. Start the app from the project root so `/api` and `/assets` resolve:
+   For an existing database created before the admin dashboard, also run the
+   migrations in order (see [Supabase setup](#supabase-setup)).
+
+3. Create the first administrator (prompts for a password of 12+ characters):
+
+   ```bash
+   php scripts/create-admin.php --email=admin@example.com --name="Store Admin"
+   ```
+
+   Reset an existing administrator's password with
+   `php scripts/create-admin.php --email=admin@example.com --update-password`.
+
+4. Start the app from the project root so `/api` and `/assets` resolve:
 
    ```bash
    php -S 127.0.0.1:8080 server.php
    ```
 
-   Then open <http://127.0.0.1:8080/>.
+   Then open <http://127.0.0.1:8080/> and sign in at
+   <http://127.0.0.1:8080/admin/login>.
 
-4. Alternatively run the Apache + PHP image:
+5. Alternatively run the Apache + PHP image:
 
    ```bash
    docker compose up --build
@@ -150,9 +187,10 @@ If `pdo_pgsql` is missing on a native install, enable the extension in
 | `SUPABASE_URL` | Project URL used to build public Storage image URLs. |
 | `SUPABASE_STORAGE_BUCKET` | Bucket name, default `product-images`. |
 | `SUPABASE_STORAGE_PUBLIC_URL` | Optional full public base URL for the bucket. |
-| `SUPABASE_SERVICE_ROLE_KEY` | Used only by the optional upload script; never by the browser. |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server-side key used by admin image uploads and the optional upload script; never exposed to the browser. |
 | `CORS_ALLOWED_ORIGIN` | Optional; only needed if the static frontend runs on a different origin. |
 | `APP_ENV` | `production` or `development`. |
+| `SESSION_COOKIE_SECURE` | Optional override for the admin session cookie; defaults to secure in production. |
 
 Never commit `.env`. `SUPABASE_SERVICE_ROLE_KEY` must stay server-side and must
 not be added to Render as a client-side/build-time variable.
@@ -181,7 +219,9 @@ Existing project created with the original schema, run in this order:
 2. `database/migrations/002_storage_bucket.sql` — Storage bucket and public
    read policy.
 3. `database/migrations/004_enable_rls.sql` — Row Level Security.
-4. `database/migrations/003_migrate_images_to_storage.sql` — optional, only
+4. `database/migrations/005_admin_auth.sql` — `admin_login_attempts` table used
+   for login rate limiting.
+5. `database/migrations/003_migrate_images_to_storage.sql` — optional, only
    after the image files have actually been uploaded.
 
 ### 3. Verify the database
@@ -192,6 +232,7 @@ select count(*) from products where is_active;
 select count(*) from products where is_featured;
 select count(*) from product_images;
 select count(*) from product_variants;
+select count(*) from admin_login_attempts;
 ```
 
 Expected sample data: 4 categories, 13 products, 4 featured products,
@@ -218,9 +259,9 @@ the frontend.
 
 `schema.sql` enables RLS on all application tables with no `anon` or
 `authenticated` policies. This blocks the public PostgREST endpoint from reading
-or writing store data. The PHP API still works because it connects as the table
-owner/server-side role. Add explicit policies later only if the admin dashboard
-uses Supabase Auth directly.
+or writing store data. The PHP API and admin dashboard still work because they
+connect as the table owner/server-side role. The admin dashboard uses PHP
+sessions, not Supabase Auth, so no additional policies are required for it.
 
 ## Supabase Storage
 
@@ -229,7 +270,8 @@ uses Supabase Auth directly.
    the bucket manually in **Storage** with public access.
 3. The script also creates a public `SELECT` policy for the bucket. It creates
    **no** insert/update/delete policy: writes must use the service-role key from
-   a trusted server process, or the future authenticated admin dashboard.
+   a trusted server process. The admin dashboard does exactly this through
+   `api/lib/SupabaseStorage.php`; the browser never receives the key.
 4. Recommended object layout:
 
    ```text
@@ -353,6 +395,67 @@ Status codes: `200` success, `400` invalid input, `404` missing product/route,
 `405` unsupported method, `500` generic server error. Internal SQL errors and
 stack traces are logged server-side and never returned to the browser.
 
+## Admin dashboard
+
+The admin dashboard is server-rendered PHP at `/admin`; it shares the same
+PostgreSQL database and helper libraries as the public API.
+
+- Sign in at `/admin/login`. Customers (`role = 'user'`) and inactive accounts
+  are rejected with the same generic error as an unknown email.
+- Passwords are stored with `password_hash()`/`password_verify()` (bcrypt).
+  Minimum length is 12 characters.
+- Admin sessions use the `redstore_admin` cookie: `HttpOnly`, `SameSite=Lax`,
+  `Secure` when `APP_ENV=production` (override with
+  `SESSION_COOKIE_SECURE`). Session IDs are regenerated on login and
+  periodically afterwards.
+- Every state-changing request requires a CSRF token. Successful profile and
+  password changes rotate the token.
+- Login rate limiting is server-side: 5 failures per email or 20 per IP in a
+  15-minute window returns HTTP 429. Successful login clears the failures.
+- Security headers (`CSP`, `X-Frame-Options`, `nosniff`, `Referrer-Policy`,
+  `Cache-Control: no-store`) are sent on admin and admin API responses.
+
+Modules:
+
+- **Overview** — revenue, product/order/customer counts, recent orders,
+  customers and products, best sellers, and low/out-of-stock summary.
+- **Products** — search/category/status filters, sorting and pagination;
+  create/edit with slug, category, pricing, sale price, stock, featured/active
+  flags, variants, and image gallery management (upload, replace, reorder,
+  set primary, alt text, delete).
+- **Categories** — create, rename, and delete; deleting a category that still
+  has products requires explicit confirmation and unassigns those products.
+- **Inventory** — search and `in`/`low`/`out` stock filters, inline stock edits
+  for simple products and per-variant stock edits.
+- **Orders** — search, status/date-range filters, sorting, pagination, customer
+  and shipping details, line items with snapshotted names/prices, and status
+  updates. Transitions are validated server-side: `pending → paid/processing/
+  cancelled`, `paid → processing/shipped/cancelled/refunded`,
+  `processing → shipped/delivered/cancelled/refunded`,
+  `shipped → delivered/refunded`, `delivered → refunded`; `cancelled` and
+  `refunded` are terminal.
+- **Customers** — search, active/inactive filters, sorting by newest/name/
+  orders/spend, order history, lifetime value, and deactivate/reactivate.
+  Password hashes are never selected or returned. Customers are never deleted
+  or promoted here.
+- **Settings** — update the signed-in administrator's name/email and password.
+  Static About/branding/layout content cannot be changed from the dashboard.
+
+Product images are limited to JPEG, PNG, WebP or AVIF, 5 MB each, and 20 per
+product. Uploads require `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`; without
+them the dashboard returns a clear `storage_not_configured` error instead of
+storing anything. Local `assets/...` image paths continue to work.
+
+The admin JSON API lives under `/api/admin` (`/me`, `/dashboard`, `/products`,
+`/categories`, `/inventory`, `/orders`, `/customers`, `/account`) and requires
+the same admin session and CSRF token. It exists for progressive enhancement
+and tooling; the dashboard itself posts to the server-rendered routes.
+
+Known limitation: the schema has no `order_status_history` table, so status
+changes update `orders.status`/`updated_at` but no per-change audit trail is
+stored. Order line items are snapshots and are never rewritten by status
+changes.
+
 ## Dynamic frontend
 
 - `index.html` loads featured and latest products from the API, with loading,
@@ -386,21 +489,35 @@ stack traces are logged server-side and never returned to the browser.
    - `DATABASE_URL` — Supabase session-pooler connection string with SSL.
    - `SUPABASE_URL` — project URL.
    - `SUPABASE_STORAGE_BUCKET=product-images`.
+   - `SUPABASE_SERVICE_ROLE_KEY` — required for admin image uploads; mark it as
+     a secret and never expose it to the browser.
    - `APP_ENV=production`.
    - `DB_SSLMODE=require`.
+   - `SESSION_COOKIE_SECURE=true` (recommended in production).
    - Optionally `CORS_ALLOWED_ORIGIN` (leave blank for same-origin).
 
-5. Render supplies `PORT`; `docker/entrypoint.sh` makes Apache listen on it.
-6. Use `/` as the health check path. The API is served from `/api`.
-7. Deploy, then test:
+5. Run `database/migrations/005_admin_auth.sql` if the database was created
+   before the admin dashboard, then create the first administrator from the
+   Render shell:
+
+   ```bash
+   php scripts/create-admin.php --email=admin@example.com --name="Store Admin"
+   ```
+
+6. Render supplies `PORT`; `docker/entrypoint.sh` makes Apache listen on it.
+7. Use `/` as the health check path. The API is served from `/api` and the
+   dashboard from `/admin`.
+8. Deploy, then test:
 
    ```bash
    curl -sS https://YOUR-SERVICE.onrender.com/api/products?limit=2
    curl -sS https://YOUR-SERVICE.onrender.com/api/categories
+   curl -sS -o /dev/null -w '%{http_code}\n' https://YOUR-SERVICE.onrender.com/admin/login
    ```
 
    Then open the homepage, product listing and a product detail page in the
-   browser and check the developer console for errors.
+   browser and check the developer console for errors. Sign in at `/admin/login`
+   and verify product, category, inventory, order and customer pages.
 
 Render free-tier services can sleep after inactivity and have usage limits.
 The first request after sleep may be slow.
@@ -413,18 +530,30 @@ The first request after sleep may be slow.
 - Only active products are returned from public endpoints.
 - Database credentials and service-role keys are server-side environment
   variables only.
-- `.env` and dotfiles are excluded from Git and denied by Apache.
-- Backend source folders and SQL files are denied by the root `.htaccess`.
+- `.env` and dotfiles are excluded from Git and denied by Apache and the local
+  `server.php` router.
+- Backend source folders, SQL files and tooling are denied by the root
+  `.htaccess` and by `server.php` in local development.
 - RLS is enabled on application tables without public policies.
 - Product image writes are restricted to service-role/server-side operations.
+  Uploads are MIME-checked with `finfo`, size-limited, generated with random
+  object names, and limited to 20 images per product.
+- Admin passwords use bcrypt; sessions are `HttpOnly`/`SameSite=Lax` (and
+  `Secure` in production) with periodic ID regeneration.
+- Admin state-changing requests require CSRF tokens; login attempts are
+  rate-limited per email and IP.
+- Customer passwords and password hashes are never selected by admin queries or
+  returned by admin APIs.
 - Error responses do not expose SQL, stack traces or credentials.
 
 ## Out of scope in this phase
 
-- Admin dashboard and admin product/image management UI.
-- Full authentication and user sessions.
 - Cart persistence, checkout and order placement.
 - Payment integration.
+- Per-change order status history (the schema has no history table).
+- Editing static site content (About Us, branding, layout, CSS) from the admin
+  dashboard.
 
-The schema already includes tables for users, carts, orders and order items so
-those features can be added later without redesigning the product catalogue.
+The schema includes tables for carts, orders and order items; admin order and
+customer views work against existing data even though the public storefront does
+not yet offer checkout.
