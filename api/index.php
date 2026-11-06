@@ -26,8 +26,28 @@ header('X-Content-Type-Options: nosniff');
 header('Referrer-Policy: no-referrer');
 header('X-Frame-Options: DENY');
 
+$uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+$uri = is_string($uri) ? $uri : '/';
+
+$scriptName = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
+$basePath = rtrim(str_replace('\\', '/', dirname($scriptName)), '/');
+if ($basePath === '.' || $basePath === '/') {
+    $basePath = '';
+}
+
+if ($basePath !== '' && str_starts_with($uri, $basePath)) {
+    $path = substr($uri, strlen($basePath));
+} elseif (str_starts_with($uri, '/api')) {
+    $path = substr($uri, 4);
+} else {
+    $path = $uri;
+}
+
+$path = '/' . trim($path, '/');
+$isAdminApi = str_starts_with($path, '/admin');
+
 $allowedOrigin = $config['cors_allowed_origin'];
-if ($allowedOrigin !== '') {
+if (!$isAdminApi && $allowedOrigin !== '') {
     $requestOrigin = $_SERVER['HTTP_ORIGIN'] ?? '';
     if ($allowedOrigin === '*' || $requestOrigin === $allowedOrigin) {
         header('Access-Control-Allow-Origin: ' . ($allowedOrigin === '*' ? '*' : $requestOrigin));
@@ -57,34 +77,22 @@ $method = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
 
 if ($method === 'OPTIONS') {
     http_response_code(204);
-    header('Allow: GET, OPTIONS');
+    header('Allow: ' . ($isAdminApi ? 'GET, POST, PUT, PATCH, DELETE, OPTIONS' : 'GET, OPTIONS'));
     exit;
 }
 
-$uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
-$uri = is_string($uri) ? $uri : '/';
-
-$scriptName = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
-$basePath = rtrim(str_replace('\\', '/', dirname($scriptName)), '/');
-if ($basePath === '.' || $basePath === '/') {
-    $basePath = '';
-}
-
-if ($basePath !== '' && str_starts_with($uri, $basePath)) {
-    $path = substr($uri, strlen($basePath));
-} elseif (str_starts_with($uri, '/api')) {
-    $path = substr($uri, 4);
-} else {
-    $path = $uri;
-}
-
-$path = '/' . trim($path, '/');
-if ($path === '/') {
-    $path = '/';
+if ($isAdminApi) {
+    require_once __DIR__ . '/lib/Auth.php';
+    require_once __DIR__ . '/lib/ApiException.php';
+    require_once __DIR__ . '/lib/Response.php';
 }
 
 try {
-    $router = require __DIR__ . '/routes/products.php';
+    if ($isAdminApi) {
+        $router = require __DIR__ . '/routes/admin.php';
+    } else {
+        $router = require __DIR__ . '/routes/products.php';
+    }
     $router($method, $path);
 } catch (ApiException $exception) {
     Response::error($exception->status, $exception->errorCode, $exception->getMessage());

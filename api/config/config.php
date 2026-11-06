@@ -81,6 +81,8 @@ if (!function_exists('redstore_config')) {
             'supabase_url' => rtrim((string) redstore_env('SUPABASE_URL', ''), '/'),
             'storage_bucket' => trim((string) redstore_env('SUPABASE_STORAGE_BUCKET', 'product-images'), '/'),
             'storage_public_url' => rtrim((string) redstore_env('SUPABASE_STORAGE_PUBLIC_URL', ''), '/'),
+            'supabase_service_role_key' => (string) redstore_env('SUPABASE_SERVICE_ROLE_KEY', ''),
+            'session_cookie_secure' => trim((string) redstore_env('SESSION_COOKIE_SECURE', '')),
             'cors_allowed_origin' => trim((string) redstore_env('CORS_ALLOWED_ORIGIN', '')),
             'db' => [
                 'url' => (string) redstore_env('DATABASE_URL', ''),
