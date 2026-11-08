@@ -109,6 +109,40 @@ final class User
     }
 
     /**
+     * Create a storefront customer account. Callers must hash the password.
+     */
+    public function createCustomer(string $email, string $passwordHash, ?string $fullName): string
+    {
+        $statement = $this->db->prepare(
+            'INSERT INTO users (email, password_hash, full_name, role, is_active)
+             VALUES (:email, :password_hash, :full_name, \'user\', true)
+             RETURNING id'
+        );
+        $statement->bindValue(':email', trim($email), PDO::PARAM_STR);
+        $statement->bindValue(':password_hash', $passwordHash, PDO::PARAM_STR);
+        if ($fullName === null || trim($fullName) === '') {
+            $statement->bindValue(':full_name', null, PDO::PARAM_NULL);
+        } else {
+            $statement->bindValue(':full_name', trim($fullName), PDO::PARAM_STR);
+        }
+        $statement->execute();
+
+        return (string) $statement->fetchColumn();
+    }
+
+    public function updateCustomerPassword(string $id, string $passwordHash): bool
+    {
+        $statement = $this->db->prepare(
+            'UPDATE users SET password_hash = :password_hash WHERE id = :id AND role = \'user\''
+        );
+        $statement->bindValue(':password_hash', $passwordHash, PDO::PARAM_STR);
+        $statement->bindValue(':id', $id, PDO::PARAM_STR);
+        $statement->execute();
+
+        return $statement->rowCount() === 1;
+    }
+
+    /**
      * CLI-only helper. Callers must hash the password before calling this.
      */
     public function createAdmin(string $email, string $passwordHash, string $fullName): string

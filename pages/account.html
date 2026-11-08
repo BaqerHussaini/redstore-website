@@ -75,31 +75,45 @@
                 <span class="auth-card__indicator" aria-hidden="true"></span>
               </div>
 
-              <form class="auth-form auth-form--login" id="login-form" role="tabpanel" aria-labelledby="login-tab" aria-hidden="true" inert>
-                <label class="visually-hidden" for="login-username">Username</label>
-                <input id="login-username" name="username" type="text" placeholder="Username" autocomplete="username">
+              <form class="auth-form auth-form--login" id="login-form" role="tabpanel" aria-labelledby="login-tab" aria-hidden="true" inert novalidate>
+                <label class="visually-hidden" for="login-email">Email</label>
+                <input id="login-email" name="email" type="email" placeholder="Email" autocomplete="email" required>
 
                 <label class="visually-hidden" for="login-password">Password</label>
-                <input id="login-password" name="password" type="password" placeholder="Password" autocomplete="current-password">
+                <input id="login-password" name="password" type="password" placeholder="Password" autocomplete="current-password" required>
+
+                <p class="auth-form__status" id="login-status" role="status" aria-live="polite" hidden></p>
 
                 <button class="btn auth-form__submit" type="submit">Login</button>
                 <a class="auth-form__link" href="#">Forgot password?</a>
               </form>
 
-              <form class="auth-form auth-form--register" id="register-form" role="tabpanel" aria-labelledby="register-tab">
-                <label class="visually-hidden" for="register-username">Username</label>
-                <input id="register-username" name="username" type="text" placeholder="Username" autocomplete="username">
+              <form class="auth-form auth-form--register" id="register-form" role="tabpanel" aria-labelledby="register-tab" novalidate>
+                <label class="visually-hidden" for="register-name">Full name</label>
+                <input id="register-name" name="full_name" type="text" placeholder="Full name" autocomplete="name">
 
                 <label class="visually-hidden" for="register-email">Email</label>
-                <input id="register-email" name="email" type="email" placeholder="Email" autocomplete="email">
+                <input id="register-email" name="email" type="email" placeholder="Email" autocomplete="email" required>
 
                 <label class="visually-hidden" for="register-password">Password</label>
-                <input id="register-password" name="password" type="password" placeholder="Password" autocomplete="new-password">
+                <input id="register-password" name="password" type="password" placeholder="Password (8+ characters)" autocomplete="new-password" minlength="8" required>
+
+                <p class="auth-form__status" id="register-status" role="status" aria-live="polite" hidden></p>
 
                 <button class="btn auth-form__submit" type="submit">Register</button>
                 <a class="auth-form__link" id="show-login" href="#login-form">Already have an account?</a>
                 <p>By creating an account, you agree to RedStore's <a href="#">Conditions of Use</a> and <a href="#">Privacy Policy</a>.</p>
               </form>
+            </div>
+
+            <div class="account-panel" id="account-panel" hidden>
+              <h2 class="account-panel__title">Your account</h2>
+              <p class="account-panel__name" id="account-name"></p>
+              <p class="account-panel__email" id="account-email"></p>
+              <p class="account-panel__note">Your cart is saved to your account and will be waiting for you on your next visit.</p>
+              <a class="btn account-panel__cta" href="cart.html">View saved cart</a>
+              <a class="account-panel__link" href="products.html">Continue shopping</a>
+              <button class="account-panel__link account-panel__logout" id="logout-button" type="button">Sign out</button>
             </div>
           </div>
         </div>

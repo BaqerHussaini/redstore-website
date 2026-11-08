@@ -131,6 +131,80 @@
   text-decoration: underline;
 }
 
+.auth-form__status {
+  color: var(--color-brand-dark);
+  font-weight: 500;
+}
+
+.auth-form__status.is-error {
+  color: #b3261e;
+}
+
+/* ---------- Signed-in account panel ---------- */
+.account-panel {
+  width: 320px;
+  margin-inline: auto;
+  padding: 32px 24px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  text-align: center;
+}
+
+.account-panel[hidden] {
+  display: none;
+}
+
+.account-panel__title {
+  margin-bottom: 12px;
+  font-size: 1.25rem;
+}
+
+.account-panel__name {
+  margin-bottom: 2px;
+  font-weight: 600;
+}
+
+.account-panel__email {
+  margin-bottom: 16px;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.account-panel__note {
+  margin-bottom: 20px;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+}
+
+.account-panel__cta {
+  display: block;
+  margin-bottom: 14px;
+}
+
+.account-panel__link {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-text-muted);
+  font: inherit;
+  font-size: 0.85rem;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.account-panel__link:hover {
+  text-decoration: underline;
+}
+
+.account-panel__logout {
+  color: var(--color-brand-dark);
+}
+
 /* ---------- Small screens ---------- */
 @media (max-width: 600px) {
   .account-page__inner {

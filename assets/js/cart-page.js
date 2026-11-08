@@ -142,12 +142,20 @@
     }
   };
 
-  const removeItem = (item) => {
+  const removeItem = async (item, row) => {
     const name = item.product?.name || 'Item';
-    cart.remove(item.product_id, item.variant_id);
+    setRowBusy(row, true);
+
+    try {
+      await cart.remove(item.product_id, item.variant_id);
+    } catch (error) {
+      setRowBusy(row, false);
+      cart.notify(error?.message || 'Could not remove this item.', 'error');
+      return;
+    }
 
     const items = current.items.filter(
-      (row) => cart.keyFor(row.product_id, row.variant_id) !== cart.keyFor(item.product_id, item.variant_id)
+      (rowItem) => cart.keyFor(rowItem.product_id, rowItem.variant_id) !== cart.keyFor(item.product_id, item.variant_id)
     );
 
     if (items.length === 0) {
@@ -235,7 +243,7 @@
     remove.className = 'cart-item__remove';
     remove.textContent = 'Remove';
     remove.setAttribute('aria-label', `Remove ${nameText} from cart`);
-    remove.addEventListener('click', () => removeItem(item));
+    remove.addEventListener('click', () => removeItem(item, row));
     details.append(remove);
 
     wrapper.append(image, details);
@@ -339,13 +347,21 @@
   };
 
   if (clearButton) {
-    clearButton.addEventListener('click', () => {
+    clearButton.addEventListener('click', async () => {
       if (current.items.length === 0) return;
       if (!window.confirm('Remove all items from your cart?')) return;
-      cart.clear();
-      current = { items: [], summary: emptySummary() };
-      cart.notify('Your cart has been cleared.', 'info');
-      showEmpty();
+
+      clearButton.disabled = true;
+      try {
+        await cart.clear();
+        current = { items: [], summary: emptySummary() };
+        cart.notify('Your cart has been cleared.', 'info');
+        showEmpty();
+      } catch (error) {
+        cart.notify(error?.message || 'Could not clear your cart.', 'error');
+      } finally {
+        clearButton.disabled = false;
+      }
     });
   }
 

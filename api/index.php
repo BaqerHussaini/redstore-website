@@ -52,8 +52,8 @@ if (!$isAdminApi && $allowedOrigin !== '') {
     if ($allowedOrigin === '*' || $requestOrigin === $allowedOrigin) {
         header('Access-Control-Allow-Origin: ' . ($allowedOrigin === '*' ? '*' : $requestOrigin));
         header('Vary: Origin');
-        header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-        header('Access-Control-Allow-Headers: Content-Type');
+        header('Access-Control-Allow-Methods: GET, POST, PATCH, DELETE, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, X-CSRF-Token');
         header('Access-Control-Max-Age: 86400');
     }
 }
@@ -77,7 +77,7 @@ $method = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
 
 if ($method === 'OPTIONS') {
     http_response_code(204);
-    header('Allow: ' . ($isAdminApi ? 'GET, POST, PUT, PATCH, DELETE, OPTIONS' : 'GET, POST, OPTIONS'));
+    header('Allow: ' . ($isAdminApi ? 'GET, POST, PUT, PATCH, DELETE, OPTIONS' : 'GET, POST, PATCH, DELETE, OPTIONS'));
     exit;
 }
 
@@ -90,6 +90,8 @@ if ($isAdminApi) {
 try {
     if ($isAdminApi) {
         $router = require __DIR__ . '/routes/admin.php';
+    } elseif (str_starts_with($path, '/auth')) {
+        $router = require __DIR__ . '/routes/auth.php';
     } elseif (str_starts_with($path, '/cart')) {
         $router = require __DIR__ . '/routes/cart.php';
     } else {

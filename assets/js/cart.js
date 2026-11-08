@@ -1,9 +1,10 @@
 /**
- * RedStore – guest shopping cart.
+ * RedStore – shopping cart.
  *
- * The browser stores ONLY product IDs, variant IDs and quantities. Product
- * names, images, prices and stock are always re-validated against the PHP API
- * (and therefore PostgreSQL) before anything is displayed or changed.
+ * Guests keep a localStorage cart containing ONLY product IDs, variant IDs and
+ * quantities. Signed-in customers use a saved cart in PostgreSQL through the
+ * PHP API. In both cases product names, images, prices and stock are always
+ * re-validated server-side before anything is displayed or changed.
  *
  * This module also renders the header cart badge and the toast notifications
  * used across the storefront.
@@ -18,6 +19,11 @@
 
   const listeners = new Set();
   let memoryItems = [];
+  let mode = 'guest';
+  let currentUser = null;
+  let initPromise = null;
+  let initGeneration = 0;
+  let serverCart = emptyCart();
 
   class CartError extends Error {
     constructor(message, code = 'cart_error') {
@@ -96,7 +102,55 @@
     return clean;
   };
 
-  const count = (items = load()) => items.reduce((total, item) => total + item.quantity, 0);
+  const clearGuestStorage = () => {
+    memoryItems = [];
+    try {
+      window.localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      /* Ignore unavailable storage. */
+    }
+  };
+
+  function emptySummary() {
+    return {
+      item_count: 0,
+      line_count: 0,
+      currency: 'USD',
+      subtotal: 0,
+      shipping: null,
+      tax: null,
+      total: 0,
+    };
+  }
+
+  function emptyCart() {
+    return { items: [], summary: emptySummary() };
+  }
+
+  const normalizeCart = (data) => ({
+    items: Array.isArray(data?.items) ? data.items : [],
+    summary: data?.summary && typeof data.summary === 'object' ? data.summary : emptySummary(),
+  });
+
+  const isUserMode = () => mode === 'user';
+
+  const getItems = () =>
+    isUserMode()
+      ? serverCart.items.map((item) => ({
+          productId: String(item.product_id || '').toLowerCase(),
+          variantId: item.variant_id ? String(item.variant_id).toLowerCase() : null,
+          quantity: Number(item.quantity) || 0,
+        }))
+      : load();
+
+  const count = (items = null) => {
+    if (isUserMode() && items === null) {
+      return Number(serverCart.summary?.item_count) || 0;
+    }
+
+    const source = items || load();
+    return source.reduce((total, item) => total + (Number(item.quantity) || 0), 0);
+  };
 
   const updateBadge = () => {
     const total = count();
@@ -119,14 +173,85 @@
 
   const emit = () => {
     const total = updateBadge();
+    const items = getItems();
     listeners.forEach((listener) => {
       try {
-        listener(total, load());
+        listener(total, items);
       } catch {
         /* A subscriber must not break the cart. */
       }
     });
     window.dispatchEvent(new CustomEvent('redstore:cart-changed', { detail: { count: total } }));
+  };
+
+  const applyServerCart = (data) => {
+    serverCart = normalizeCart(data);
+    mode = 'user';
+    emit();
+    return serverCart;
+  };
+
+  const findServerLine = (productId, variantId) => {
+    const key = keyFor(productId, variantId);
+    return serverCart.items.find((item) => keyFor(item.product_id, item.variant_id) === key) || null;
+  };
+
+  const init = () => {
+    if (initPromise) return initPromise;
+
+    const generation = ++initGeneration;
+
+    initPromise = (async () => {
+      if (typeof window.RedStoreAPI?.getSession !== 'function') {
+        mode = 'guest';
+        emit();
+        return mode;
+      }
+
+      let user = null;
+      try {
+        const session = await window.RedStoreAPI.getSession();
+        if (generation !== initGeneration) return mode;
+        user = session?.data?.user || null;
+      } catch {
+        if (generation !== initGeneration) return mode;
+      }
+
+      if (!user) {
+        currentUser = null;
+        serverCart = emptyCart();
+        mode = 'guest';
+        emit();
+        return mode;
+      }
+
+      currentUser = user;
+      mode = 'user';
+
+      try {
+        const result = await window.RedStoreAPI.getCart();
+        if (generation !== initGeneration) return mode;
+        serverCart = normalizeCart(result.data);
+      } catch {
+        if (generation !== initGeneration) return mode;
+        serverCart = emptyCart();
+      }
+
+      emit();
+      return mode;
+    })();
+
+    return initPromise;
+  };
+
+  const ensureReady = () => init();
+
+  const refreshSession = () => {
+    initPromise = null;
+    currentUser = null;
+    serverCart = emptyCart();
+    mode = 'guest';
+    return init();
   };
 
   const subscribe = (listener) => {
@@ -214,17 +339,9 @@
     return result.data;
   };
 
-  const emptySummary = () => ({
-    item_count: 0,
-    line_count: 0,
-    currency: 'USD',
-    subtotal: 0,
-    shipping: null,
-    tax: null,
-    total: 0,
-  });
-
   const add = async (productId, variantId, quantity) => {
+    await ensureReady();
+
     const product = String(productId || '').toLowerCase();
     const variant = variantId ? String(variantId).toLowerCase() : null;
 
@@ -236,6 +353,12 @@
     }
 
     const requested = clampInt(quantity, 1, MAX_QUANTITY);
+
+    if (isUserMode()) {
+      const result = await window.RedStoreAPI.addCartItem(product, variant, requested);
+      return applyServerCart(result.data);
+    }
+
     const items = load();
     const key = keyFor(product, variant);
     const line = items.find((item) => keyFor(item.productId, item.variantId) === key);
@@ -272,6 +395,23 @@
   };
 
   const updateQuantity = async (productId, variantId, quantity) => {
+    await ensureReady();
+
+    const requested = clampInt(quantity, 1, MAX_QUANTITY);
+
+    if (isUserMode()) {
+      const line = findServerLine(productId, variantId);
+      if (!line) {
+        throw new CartError('This item is no longer in your cart.', 'not_found');
+      }
+      if (requested === Number(line.quantity)) {
+        return null;
+      }
+
+      const result = await window.RedStoreAPI.updateCartItem(line.id, requested);
+      return applyServerCart(result.data);
+    }
+
     const items = load();
     const key = keyFor(productId, variantId);
     const line = items.find((item) => keyFor(item.productId, item.variantId) === key);
@@ -280,7 +420,6 @@
       throw new CartError('This item is no longer in your cart.', 'not_found');
     }
 
-    const requested = clampInt(quantity, 1, MAX_QUANTITY);
     if (requested === line.quantity) {
       return null;
     }
@@ -301,14 +440,36 @@
     return data;
   };
 
-  const remove = (productId, variantId) => {
+  const remove = async (productId, variantId) => {
+    await ensureReady();
+
+    if (isUserMode()) {
+      const line = findServerLine(productId, variantId);
+      if (!line) {
+        return getItems();
+      }
+
+      const result = await window.RedStoreAPI.removeCartItem(line.id);
+      return applyServerCart(result.data).items;
+    }
+
     const key = keyFor(productId, variantId);
     const items = load().filter((item) => keyFor(item.productId, item.variantId) !== key);
     save(items);
     return items;
   };
 
-  const clear = () => save([]);
+  const clear = async () => {
+    await ensureReady();
+
+    if (isUserMode()) {
+      const result = await window.RedStoreAPI.clearCart();
+      applyServerCart(result.data);
+      return [];
+    }
+
+    return save([]);
+  };
 
   const buildReconciledData = (data, kept) => {
     const quantities = new Map(kept.map((item) => [keyFor(item.productId, item.variantId), item.quantity]));
@@ -348,11 +509,26 @@
   };
 
   /**
-   * Validate the stored cart, drop unavailable products and clamp quantities
-   * to current stock. Returns null when the API cannot be reached so callers
-   * can show a retry state without destroying the stored cart.
+   * Return authoritative cart data. Signed-in customers load their saved cart
+   * from the API (which also reconciles stock). Guests validate and reconcile
+   * the localStorage cart. Returns null when the API cannot be reached.
    */
   const reconcile = async () => {
+    await ensureReady();
+
+    if (isUserMode()) {
+      try {
+        const result = await window.RedStoreAPI.getCart();
+        applyServerCart(result.data);
+        if (result.meta?.reconciled) {
+          notify('Your saved cart was updated to match current stock.', 'info');
+        }
+        return result.data;
+      } catch {
+        return null;
+      }
+    }
+
     const items = load();
     if (items.length === 0) {
       return { items: [], summary: emptySummary() };
@@ -413,8 +589,53 @@
     return data;
   };
 
+  /**
+   * Merge the guest localStorage cart into the signed-in customer's saved cart.
+   * The server combines duplicate lines, clamps to stock and skips unavailable
+   * products; the local copy is cleared only after a successful merge.
+   */
+  const mergeGuestCart = async () => {
+    initPromise = null;
+    await init();
+
+    if (!isUserMode()) {
+      return null;
+    }
+
+    const guest = load();
+    if (guest.length === 0) {
+      return null;
+    }
+
+    const payload = guest.map((item) => ({
+      product_id: item.productId,
+      variant_id: item.variantId,
+      quantity: item.quantity,
+    }));
+
+    const result = await window.RedStoreAPI.mergeCart(payload);
+    clearGuestStorage();
+    applyServerCart(result.data);
+
+    const meta = result.meta || {};
+    if (Number(meta.merged) > 0) {
+      notify(
+        `${meta.merged} guest cart item${Number(meta.merged) === 1 ? '' : 's'} added to your saved cart.`,
+        'success'
+      );
+    }
+    if (Number(meta.skipped) > 0) {
+      notify(
+        `${meta.skipped} unavailable item${Number(meta.skipped) === 1 ? '' : 's'} could not be added.`,
+        'info'
+      );
+    }
+
+    return result;
+  };
+
   window.addEventListener('storage', (event) => {
-    if (event.key !== STORAGE_KEY) return;
+    if (event.key !== STORAGE_KEY || isUserMode()) return;
     emit();
   });
 
@@ -425,10 +646,14 @@
     add,
     clear,
     count,
-    getItems: load,
+    getItems,
+    getUser: () => currentUser,
+    isAuthenticated: isUserMode,
     keyFor,
+    mergeGuestCart,
     notify,
     reconcile,
+    refreshSession,
     remove,
     subscribe,
     updateBadge,
@@ -436,4 +661,7 @@
   };
 
   updateBadge();
+  init().catch(() => {
+    /* Keep the guest badge if the session/cart request fails. */
+  });
 })();

@@ -35,7 +35,9 @@
     return url.toString();
   };
 
-  const execute = async (path, { method = 'GET', params = {}, body = null } = {}) => {
+  let csrfToken = null;
+
+  const execute = async (path, { method = 'GET', params = {}, body = null, csrf = true, csrfRetried = false } = {}) => {
     const controller = new AbortController();
     const timer = window.setTimeout(() => controller.abort(), 15000);
 
@@ -50,6 +52,11 @@
     if (body !== null && body !== undefined) {
       headers['Content-Type'] = 'application/json';
       options.body = JSON.stringify(body);
+    }
+
+    if (csrf && method !== 'GET' && method !== 'HEAD') {
+      await ensureCsrf();
+      if (csrfToken) headers['X-CSRF-Token'] = csrfToken;
     }
 
     let response;
@@ -73,6 +80,13 @@
 
     if (!response.ok || payload?.success === false) {
       const apiError = payload?.error || {};
+
+      if (response.status === 403 && apiError.code === 'csrf_failed' && csrf && !csrfRetried) {
+        csrfToken = null;
+        await ensureCsrf();
+        return execute(path, { method, params, body, csrf, csrfRetried: true });
+      }
+
       throw new ApiError(
         apiError.message || 'The store API could not complete the request.',
         response.status,
@@ -81,15 +95,58 @@
       );
     }
 
+    if (payload?.data && typeof payload.data.csrf_token === 'string') {
+      csrfToken = payload.data.csrf_token;
+    }
+
     return {
       data: payload.data,
       meta: payload.meta || null,
     };
   };
 
+  const ensureCsrf = async () => {
+    if (csrfToken) return;
+    try {
+      const result = await execute('/auth/me', { csrf: false });
+      csrfToken = result.data?.csrf_token || null;
+    } catch {
+      /* Guest or offline; the server will reject the mutation if it needs a token. */
+    }
+  };
+
   const request = (path, params = {}) => execute(path, { params });
   const validateCart = (items) =>
     execute('/cart/validate', { method: 'POST', body: { items: Array.isArray(items) ? items : [] } });
+
+  const getSession = () => execute('/auth/me', { csrf: false });
+  const register = (fullName, email, password) =>
+    execute('/auth/register', {
+      method: 'POST',
+      csrf: false,
+      body: { full_name: fullName || null, email, password },
+    });
+  const login = (email, password) =>
+    execute('/auth/login', { method: 'POST', csrf: false, body: { email, password } });
+  const logout = async () => {
+    const result = await execute('/auth/logout', { method: 'POST' });
+    csrfToken = null;
+    return result;
+  };
+
+  const getCart = () => execute('/cart');
+  const addCartItem = (productId, variantId, quantity) =>
+    execute('/cart/items', {
+      method: 'POST',
+      body: { product_id: productId, variant_id: variantId || null, quantity },
+    });
+  const updateCartItem = (itemId, quantity) =>
+    execute('/cart/items/' + encodeURIComponent(itemId), { method: 'PATCH', body: { quantity } });
+  const removeCartItem = (itemId) =>
+    execute('/cart/items/' + encodeURIComponent(itemId), { method: 'DELETE' });
+  const clearCart = () => execute('/cart', { method: 'DELETE' });
+  const mergeCart = (items) =>
+    execute('/cart/merge', { method: 'POST', body: { items: Array.isArray(items) ? items : [] } });
 
   const getProducts = (params = {}) => request('/products', params);
   const getFeaturedProducts = (params = {}) => request('/products/featured', params);
@@ -135,5 +192,15 @@
     getLatestProducts,
     getCategories,
     validateCart,
+    getSession,
+    register,
+    login,
+    logout,
+    getCart,
+    addCartItem,
+    updateCartItem,
+    removeCartItem,
+    clearCart,
+    mergeCart,
   };
 })();

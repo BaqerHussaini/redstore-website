@@ -5,10 +5,10 @@ original HTML/CSS/vanilla-JavaScript design, but product data now comes from a
 PHP REST API backed by Supabase PostgreSQL. Product images can be served from
 the local `assets/images/` folder or from Supabase Storage.
 
-This phase implements the database, PHP API, dynamic product pages, a complete
-guest shopping cart, a secure server-rendered admin dashboard, and deployment
-configuration. Saved carts for authenticated customers, checkout and payment
-integration remain **out of scope**.
+This phase implements the database, PHP API, dynamic product pages, guest and
+saved (database-backed) shopping carts, customer accounts, a secure
+server-rendered admin dashboard, and deployment configuration. Checkout and
+payment integration remain **out of scope**.
 
 ## Architecture
 
@@ -60,7 +60,8 @@ redstore-website/
 │   │   └── database.php        # PDO PostgreSQL connection
 │   ├── controllers/
 │   │   ├── ProductController.php
-│   │   ├── CartController.php  # guest cart price/stock validation
+│   │   ├── AuthController.php  # customer register/login/logout/session
+│   │   ├── CartController.php  # guest validation + saved cart operations
 │   │   ├── AdminDashboardController.php
 │   │   ├── AdminProductController.php
 │   │   ├── AdminCategoryController.php
@@ -69,7 +70,8 @@ redstore-website/
 │   │   └── AdminCustomerController.php
 │   ├── lib/
 │   │   ├── ApiException.php
-│   │   ├── Auth.php            # sessions, CSRF, rate limiting, password hashing
+│   │   ├── Auth.php            # admin sessions, CSRF, rate limiting, hashing
+│   │   ├── CustomerAuth.php    # separate customer session + CSRF
 │   │   ├── ImageUploader.php   # MIME/size validation + safe object paths
 │   │   ├── ImageUrl.php        # local/storage image URL resolution
 │   │   ├── Input.php           # typed request input validation
@@ -79,6 +81,7 @@ redstore-website/
 │   │   ├── Category.php
 │   │   ├── Product.php
 │   │   ├── User.php
+│   │   ├── Cart.php            # saved cart_items persistence
 │   │   ├── ProductImage.php
 │   │   ├── LoginAttempt.php
 │   │   ├── AdminDashboard.php
@@ -89,7 +92,8 @@ redstore-website/
 │   │   └── AdminCustomer.php
 │   ├── routes/
 │   │   ├── products.php
-│   │   ├── cart.php            # POST /api/cart/validate
+│   │   ├── auth.php            # /api/auth/* customer account routes
+│   │   ├── cart.php            # guest validation + saved cart routes
 │   │   └── admin.php
 │   ├── .htaccess               # Apache rewrite to index.php
 │   └── index.php               # API front controller
@@ -320,7 +324,17 @@ Base URL: `/api`. All public endpoints return only active products.
 | `GET` | `/api/products/latest` | Latest products (`limit` 1–24, default 8) |
 | `GET` | `/api/products/{slug}` | Single active product by slug |
 | `GET` | `/api/categories` | Categories with active product counts |
+| `POST` | `/api/auth/register` | Create a customer account and start a session |
+| `POST` | `/api/auth/login` | Sign in a customer |
+| `POST` | `/api/auth/logout` | Destroy the customer session (CSRF required) |
+| `GET` | `/api/auth/me` | Current customer (or `null`) and a CSRF token |
 | `POST` | `/api/cart/validate` | Validate a guest cart against current PostgreSQL prices and stock |
+| `GET` | `/api/cart` | Saved cart for the signed-in customer (reconciles stock) |
+| `POST` | `/api/cart/items` | Add or merge a saved cart line (CSRF required) |
+| `PATCH` | `/api/cart/items/{id}` | Change a saved cart line quantity (CSRF required) |
+| `DELETE` | `/api/cart/items/{id}` | Remove a saved cart line (CSRF required) |
+| `DELETE` | `/api/cart` | Clear the saved cart (CSRF required) |
+| `POST` | `/api/cart/merge` | Merge a guest cart into the saved cart after login (CSRF required) |
 
 ### `/api/products` query parameters
 
@@ -514,31 +528,33 @@ negative/zero quantities, duplicate lines and unavailable products are handled
 safely. If `localStorage` is unavailable (private mode or quota), the cart keeps
 working in memory for the current page session.
 
-### Authenticated carts
+### Customer accounts and saved carts
 
-Database-backed carts are **not enabled yet**. The account page is currently a
-login/register UI only; there is no real customer authentication endpoint in the
-PHP API (`Auth.php` is the admin session implementation and rejects
-non-admin roles). Rather than create a fake login, the cart is fully functional
-for guests.
+Customers register or sign in on `pages/account.html`. Customer authentication
+uses a **separate session cookie** (`redstore_customer`) from the admin dashboard
+(`redstore_admin`) and only accepts accounts with `role = 'user'`. Passwords are
+hashed with `password_hash()`/`bcrypt`, login attempts are rate-limited per email
+and IP, and customer state-changing requests require a CSRF token returned by
+`GET /api/auth/me`.
 
-The schema already supports saved carts, so no migration is required to enable
-them later:
+Signed-in customers get a database-backed cart stored in `cart_items`
+(`user_id`, `product_id`, `variant_id`, `quantity`). Every route is scoped to the
+session user id — the browser never supplies a user id.
 
-1. Implement customer registration, login, logout and session identity in PHP
-   (separate from the admin session; validate the password hash server-side and
-   never accept a user ID from the browser).
-2. Add authenticated routes such as `GET /api/cart`, `POST /api/cart/items`,
-   `PATCH /api/cart/items/{id}`, `DELETE /api/cart/items/{id}` and
-   `DELETE /api/cart`, all scoped to the session user.
-3. Read/write the existing `cart_items` table
-   (`user_id`, `product_id`, `variant_id`, `quantity`). Re-use the existing
-   unique constraint for user/product/variant and validate every change against
-   `products` / `product_variants`.
-4. After login, validate the guest `localStorage` cart, merge it into
-   `cart_items` without creating duplicate product/variant lines or exceeding
-   stock, then clear the guest copy.
-5. Validate stock again at checkout; a cart item does not reserve inventory.
+- `GET /api/cart` returns the saved cart and reconciles it: unavailable products
+  and variants are removed, and quantities above current stock are clamped.
+- Adding the same product/variant again increases the existing line through the
+  unique `(user_id, product_id, variant_id)` constraint.
+- Quantity changes, removal and clearing go through the authenticated cart
+  routes; prices, names, images and stock still come from PostgreSQL.
+- After login or registration, the guest `localStorage` cart is validated and
+  merged into `cart_items` (duplicate lines combined, stock clamped, unavailable
+  items skipped). The local copy is cleared only after a successful merge.
+- After sign-out the saved cart remains in the database and is restored on the
+  next login. A guest cart is used again while signed out.
+
+A cart item does not reserve inventory; stock must be validated again at
+checkout.
 
 ## Admin dashboard
 
@@ -609,8 +625,10 @@ changes.
   pagination and shareable URL state (`?category=...&search=...&sort=...&page=...`).
 - `pages/product-details.html?slug=<slug>` renders any active product, including
   gallery images, variants, stock, description, Add To Cart and related products.
-- `pages/cart.html` renders the real guest cart with quantity controls, remove,
-  clear, empty state and a server-validated subtotal.
+- `pages/cart.html` renders the guest or saved cart with quantity controls,
+  remove, clear, empty state and a server-validated subtotal.
+- `pages/account.html` handles customer registration, login and sign-out, then
+  merges the guest cart into the saved cart.
 - Product cards, cart rows and detail content are inserted with DOM `textContent`
   and attributes rather than raw HTML, so database text cannot inject markup.
 - Products without a usable image fall back to
@@ -679,6 +697,10 @@ changes.
    remove an item and refresh the page. The guest cart should persist. Test that
    adding more than the available stock is rejected.
 
+   Saved cart smoke test: add an item as a guest, open `/pages/account.html`,
+   register, and confirm the guest cart is merged and the header badge is kept.
+   Sign out and back in; the saved cart should be restored from PostgreSQL.
+
 Render free-tier services can sleep after inactivity and have usage limits.
 The first request after sleep may be slow.
 
@@ -701,19 +723,21 @@ The first request after sleep may be slow.
 - Product image writes are restricted to service-role/server-side operations.
   Uploads are MIME-checked with `finfo`, size-limited, generated with random
   object names, and limited to 20 images per product.
-- Admin passwords use bcrypt; sessions are `HttpOnly`/`SameSite=Lax` (and
-  `Secure` in production) with periodic ID regeneration.
-- Admin state-changing requests require CSRF tokens; login attempts are
-  rate-limited per email and IP.
+- Passwords use bcrypt; admin and customer sessions use separate cookies
+  (`redstore_admin`, `redstore_customer`) with `HttpOnly`/`SameSite=Lax` (and
+  `Secure` in production) and periodic ID regeneration.
+- Admin and customer state-changing requests require CSRF tokens; login attempts
+  are rate-limited per email and IP. Customer cart routes are scoped to the
+  session user and never accept a user id from the browser.
 - Customer passwords and password hashes are never selected by admin queries or
   returned by admin APIs.
 - Error responses do not expose SQL, stack traces or credentials.
 
 ## Out of scope in this phase
 
-- Database-backed carts for authenticated customers (guest carts are complete).
 - Checkout and order placement.
 - Payment integration.
+- Password reset and transactional email delivery.
 - Per-change order status history (the schema has no history table).
 - Editing static site content (About Us, branding, layout, CSS) from the admin
   dashboard.
