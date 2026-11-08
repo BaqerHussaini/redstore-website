@@ -103,11 +103,43 @@ final class Input
     }
 
     /**
+     * Read and decode a JSON request body.
+     *
+     * @return array<string, mixed>
+     */
+    public static function jsonBody(): array
+    {
+        $contentType = strtolower((string) ($_SERVER['CONTENT_TYPE'] ?? ''));
+        if (str_contains($contentType, 'application/json')) {
+            $raw = file_get_contents('php://input');
+            if ($raw === false || trim($raw) === '') {
+                return [];
+            }
+            try {
+                $decoded = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
+            } catch (JsonException) {
+                throw new ApiException(400, 'invalid_json', 'The request body is not valid JSON.');
+            }
+            if (!is_array($decoded)) {
+                throw new ApiException(400, 'invalid_json', 'The JSON request body must be an object.');
+            }
+            return $decoded;
+        }
+
+        return is_array($_POST) ? $_POST : [];
+    }
+
+    /**
      * @param array<string, mixed> $source
      */
     public static function uuid(array $source, string $key, bool $required = false): ?string
     {
-        $value = trim((string) ($source[$key] ?? ''));
+        $value = $source[$key] ?? '';
+        if (is_array($value)) {
+            throw new ApiException(422, 'invalid_' . $key, 'The ' . self::label($key) . ' is not valid.');
+        }
+
+        $value = trim((string) $value);
         if ($value === '') {
             if ($required) {
                 throw new ApiException(422, 'invalid_' . $key, 'The ' . self::label($key) . ' is required.');

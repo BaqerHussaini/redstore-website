@@ -20,6 +20,9 @@
   <link rel="stylesheet" href="../assets/css/main.css">
   <link rel="stylesheet" href="../assets/css/pages/cart.css">
   <script src="../assets/js/navigation.js" defer></script>
+  <script src="../assets/js/api.js" defer></script>
+  <script src="../assets/js/cart.js" defer></script>
+  <script src="../assets/js/cart-page.js" defer></script>
 </head>
 
 <body>
@@ -59,88 +62,56 @@
       <div class="container container--narrow">
         <h1 id="cart-title" class="visually-hidden">Shopping Cart</h1>
 
-        <table class="cart-table">
-          <caption class="visually-hidden">Items in your shopping cart</caption>
-          <thead>
-            <tr>
-              <th scope="col">Product</th>
-              <th scope="col">Quantity</th>
-              <th scope="col">Subtotal</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <div class="cart-item">
-                  <img class="cart-item__image" src="../assets/images/bought/buy-1.jpg" alt="Printed T-shirt" width="80" height="80" loading="lazy" decoding="async">
-                  <div class="cart-item__details">
-                    <p class="cart-item__name">Printed T-Shirt</p>
-                    <small class="cart-item__price">Price: $50.00</small>
-                    <a class="cart-item__remove" href="#" aria-label="Remove Printed T-Shirt from cart">Remove</a>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <label class="visually-hidden" for="quantity-1">Quantity for Printed T-Shirt</label>
-                <input class="cart-item__qty" id="quantity-1" name="quantity-1" type="number" value="1" min="1" inputmode="numeric">
-              </td>
-              <td>$50.00</td>
-            </tr>
-            <tr>
-              <td>
-                <div class="cart-item">
-                  <img class="cart-item__image" src="../assets/images/bought/buy-2.jpg" alt="Printed T-shirt" width="80" height="80" loading="lazy" decoding="async">
-                  <div class="cart-item__details">
-                    <p class="cart-item__name">Printed T-Shirt</p>
-                    <small class="cart-item__price">Price: $75.00</small>
-                    <a class="cart-item__remove" href="#" aria-label="Remove Printed T-Shirt from cart">Remove</a>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <label class="visually-hidden" for="quantity-2">Quantity for Printed T-Shirt</label>
-                <input class="cart-item__qty" id="quantity-2" name="quantity-2" type="number" value="1" min="1" inputmode="numeric">
-              </td>
-              <td>$75.00</td>
-            </tr>
-            <tr>
-              <td>
-                <div class="cart-item">
-                  <img class="cart-item__image" src="../assets/images/bought/buy-3.jpg" alt="Printed T-shirt" width="80" height="80" loading="lazy" decoding="async">
-                  <div class="cart-item__details">
-                    <p class="cart-item__name">Printed T-Shirt</p>
-                    <small class="cart-item__price">Price: $75.00</small>
-                    <a class="cart-item__remove" href="#" aria-label="Remove Printed T-Shirt from cart">Remove</a>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <label class="visually-hidden" for="quantity-3">Quantity for Printed T-Shirt</label>
-                <input class="cart-item__qty" id="quantity-3" name="quantity-3" type="number" value="1" min="1" inputmode="numeric">
-              </td>
-              <td>$75.00</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="cart-status" id="cart-status" role="status">Loading your cart…</div>
 
-        <div class="cart-summary">
-          <table class="cart-summary__table">
-            <caption class="visually-hidden">Order summary</caption>
-            <tbody>
+        <div class="cart-empty" id="cart-empty" hidden>
+          <h2>Your cart is empty</h2>
+          <p>Looks like you have not added anything yet. Browse our products and find something you like.</p>
+          <a class="btn" href="products.html">Continue shopping</a>
+        </div>
+
+        <div id="cart-content" hidden>
+          <table class="cart-table">
+            <caption class="visually-hidden">Items in your shopping cart</caption>
+            <thead>
               <tr>
-                <th scope="row">Subtotal</th>
-                <td>$200.00</td>
+                <th scope="col">Product</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Subtotal</th>
               </tr>
-              <tr>
-                <th scope="row">Tax</th>
-                <td>$35.00</td>
-              </tr>
-              <tr>
-                <th scope="row">Total</th>
-                <td>$230.00</td>
-              </tr>
-            </tbody>
+            </thead>
+            <tbody id="cart-items"></tbody>
           </table>
+
+          <div class="cart-actions">
+            <a class="cart-continue" href="products.html">&larr; Continue shopping</a>
+            <button class="cart-clear" id="cart-clear" type="button">Clear cart</button>
+          </div>
+
+          <div class="cart-summary">
+            <table class="cart-summary__table">
+              <caption class="visually-hidden">Order summary</caption>
+              <tbody>
+                <tr>
+                  <th scope="row">Subtotal</th>
+                  <td id="cart-subtotal">$0.00</td>
+                </tr>
+                <tr>
+                  <th scope="row">Shipping</th>
+                  <td>Calculated at checkout</td>
+                </tr>
+                <tr>
+                  <th scope="row">Tax</th>
+                  <td>Calculated at checkout</td>
+                </tr>
+                <tr class="cart-summary__total">
+                  <th scope="row">Total</th>
+                  <td id="cart-total">$0.00</td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="cart-summary__note">Shipping and tax will be calculated during checkout.</p>
+          </div>
         </div>
       </div>
     </section>

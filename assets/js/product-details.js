@@ -27,6 +27,9 @@
   const helpers = window.RedStore;
   const slug = String(new URLSearchParams(window.location.search).get('slug') || '').trim();
 
+  let currentProduct = null;
+  let currentVariant = null;
+
   const setStatus = ({ titleText = '', message, retry = null, link = null } = {}) => {
     status.replaceChildren();
     status.hidden = false;
@@ -184,8 +187,36 @@
     stockText.classList.toggle('product-info__stock--out', outOfStock);
   };
 
+  const setAddButtonState = () => {
+    if (!addButton || !currentProduct) return;
+
+    const variants = Array.isArray(currentProduct.variants) ? currentProduct.variants : [];
+
+    if (variants.length === 0) {
+      const available = Boolean(currentProduct.in_stock);
+      addButton.disabled = !available;
+      addButton.textContent = available ? 'Add To Cart' : 'Out of Stock';
+      return;
+    }
+
+    if (!currentVariant) {
+      addButton.disabled = true;
+      addButton.textContent = 'Select a Size';
+      return;
+    }
+
+    const available = Boolean(currentVariant.in_stock);
+    addButton.disabled = !available;
+    addButton.textContent = available ? 'Add To Cart' : 'Out of Stock';
+  };
+
   const renderVariants = (product) => {
-    if (!sizeSelect) return;
+    currentVariant = null;
+
+    if (!sizeSelect) {
+      setAddButtonState();
+      return;
+    }
 
     const variants = Array.isArray(product.variants) ? product.variants : [];
     const byId = new Map(variants.map((variant) => [variant.id, variant]));
@@ -199,10 +230,7 @@
         !product.in_stock
       );
       if (quantity) quantity.max = String(Math.max(1, product.stock_quantity));
-      if (addButton) {
-        addButton.disabled = !product.in_stock;
-        addButton.textContent = product.in_stock ? 'Add To Cart' : 'Out of Stock';
-      }
+      setAddButtonState();
       return;
     }
 
@@ -223,14 +251,13 @@
     });
 
     const updateForVariant = () => {
-      const selected = byId.get(sizeSelect.value);
+      const selected = byId.get(sizeSelect.value) || null;
+      currentVariant = selected;
+
       if (!selected) {
         setStockMessage(product.in_stock ? 'Select a size to see availability.' : 'Out of stock', !product.in_stock);
         if (quantity) quantity.max = String(Math.max(1, product.stock_quantity));
-        if (addButton) {
-          addButton.disabled = !product.in_stock;
-          addButton.textContent = product.in_stock ? 'Add To Cart' : 'Out of Stock';
-        }
+        setAddButtonState();
         return;
       }
 
@@ -244,10 +271,7 @@
           quantity.value = String(Math.max(1, selected.stock_quantity));
         }
       }
-      if (addButton) {
-        addButton.disabled = !selected.in_stock;
-        addButton.textContent = selected.in_stock ? 'Add To Cart' : 'Out of Stock';
-      }
+      setAddButtonState();
     };
 
     sizeSelect.addEventListener('change', updateForVariant);
@@ -286,6 +310,8 @@
   };
 
   const renderProduct = (product) => {
+    currentProduct = product;
+
     if (title) title.textContent = product.name;
     renderPrice(product);
     renderBreadcrumb(product);
@@ -353,6 +379,71 @@
       });
     }
   };
+
+  if (addButton) {
+    addButton.addEventListener('click', async () => {
+      if (!currentProduct || addButton.disabled || addButton.getAttribute('aria-busy') === 'true') {
+        return;
+      }
+
+      const cart = window.RedStoreCart;
+      if (!cart) {
+        if (window.RedStoreUI) {
+          setStatus({ titleText: 'Cart unavailable', message: 'Please refresh the page and try again.' });
+        }
+        return;
+      }
+
+      const variants = Array.isArray(currentProduct.variants) ? currentProduct.variants : [];
+      let variant = null;
+
+      if (variants.length > 0) {
+        variant = currentVariant;
+        if (!variant) {
+          cart.notify('Please select a size before adding this product.', 'error');
+          if (sizeSelect) sizeSelect.focus();
+          return;
+        }
+        if (!variant.in_stock) {
+          cart.notify('The selected size is out of stock.', 'error');
+          return;
+        }
+      }
+
+      const stock = variant ? Number(variant.stock_quantity) : Number(currentProduct.stock_quantity);
+      let requested = Number.parseInt(quantity?.value, 10);
+      if (!Number.isFinite(requested) || requested < 1) requested = 1;
+
+      if (!Number.isFinite(stock) || stock < 1) {
+        cart.notify('This product is out of stock.', 'error');
+        return;
+      }
+
+      if (requested > stock) {
+        if (quantity) quantity.value = String(stock);
+        cart.notify(`Only ${stock} available. Please choose a lower quantity.`, 'error');
+        return;
+      }
+
+      const variantLabel = variant
+        ? ' (' + [variant.size, variant.color].filter(Boolean).join(', ') + ')'
+        : '';
+
+      addButton.disabled = true;
+      addButton.setAttribute('aria-busy', 'true');
+      addButton.textContent = 'Adding…';
+
+      try {
+        await cart.add(currentProduct.id, variant ? variant.id : null, requested);
+        cart.notify(`${currentProduct.name}${variantLabel} added to your cart.`, 'success');
+      } catch (error) {
+        cart.notify(error?.message || 'Could not add this product to the cart.', 'error');
+      } finally {
+        addButton.removeAttribute('aria-busy');
+        setAddButtonState();
+      }
+    });
+  }
 
   if (quantity) {
     quantity.addEventListener('change', () => {

@@ -87,6 +87,35 @@ final class Product
     }
 
     /**
+     * Load active products by their IDs. Used to validate guest cart contents
+     * against authoritative PostgreSQL data.
+     *
+     * @param list<string> $ids
+     * @return list<array<string, mixed>>
+     */
+    public function findActiveByIds(array $ids): array
+    {
+        $ids = array_values(array_unique(array_filter(
+            $ids,
+            static fn ($id): bool => is_string($id)
+                && preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i', $id) === 1
+        )));
+
+        if ($ids === []) {
+            return [];
+        }
+
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $sql = $this->baseSelect()
+            . " WHERE p.is_active = true AND p.id IN ($placeholders)";
+
+        $statement = $this->db->prepare($sql);
+        $statement->execute($ids);
+
+        return $this->hydrate($statement->fetchAll() ?: []);
+    }
+
+    /**
      * @return list<array<string, mixed>>
      */
     public function findFeatured(int $limit = 8): array

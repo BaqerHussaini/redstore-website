@@ -157,6 +157,12 @@
   cursor: pointer;
 }
 
+.product-info__add:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: var(--color-brand-strong);
+}
+
 .product-info__details-title {
   margin-block: 1.5rem 0.75rem;
   font-size: 1.17em;

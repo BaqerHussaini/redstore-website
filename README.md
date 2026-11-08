@@ -5,9 +5,10 @@ original HTML/CSS/vanilla-JavaScript design, but product data now comes from a
 PHP REST API backed by Supabase PostgreSQL. Product images can be served from
 the local `assets/images/` folder or from Supabase Storage.
 
-This phase implements the database, PHP API, dynamic product pages, a secure
-server-rendered admin dashboard, and deployment configuration. Cart persistence,
-checkout and payment integration remain **out of scope**.
+This phase implements the database, PHP API, dynamic product pages, a complete
+guest shopping cart, a secure server-rendered admin dashboard, and deployment
+configuration. Saved carts for authenticated customers, checkout and payment
+integration remain **out of scope**.
 
 ## Architecture
 
@@ -59,6 +60,7 @@ redstore-website/
 │   │   └── database.php        # PDO PostgreSQL connection
 │   ├── controllers/
 │   │   ├── ProductController.php
+│   │   ├── CartController.php  # guest cart price/stock validation
 │   │   ├── AdminDashboardController.php
 │   │   ├── AdminProductController.php
 │   │   ├── AdminCategoryController.php
@@ -87,6 +89,7 @@ redstore-website/
 │   │   └── AdminCustomer.php
 │   ├── routes/
 │   │   ├── products.php
+│   │   ├── cart.php            # POST /api/cart/validate
 │   │   └── admin.php
 │   ├── .htaccess               # Apache rewrite to index.php
 │   └── index.php               # API front controller
@@ -94,7 +97,8 @@ redstore-website/
 │   ├── admin/                  # admin.css + admin.js
 │   ├── css/                    # existing design system
 │   ├── images/                 # existing images + placeholder.svg
-│   └── js/                     # public storefront scripts
+│   └── js/                     # public storefront scripts (api, cart,
+│                               # cart-page, product pages)
 ├── database/
 │   ├── schema.sql              # fresh Supabase install
 │   └── migrations/
@@ -316,6 +320,7 @@ Base URL: `/api`. All public endpoints return only active products.
 | `GET` | `/api/products/latest` | Latest products (`limit` 1–24, default 8) |
 | `GET` | `/api/products/{slug}` | Single active product by slug |
 | `GET` | `/api/categories` | Categories with active product counts |
+| `POST` | `/api/cart/validate` | Validate a guest cart against current PostgreSQL prices and stock |
 
 ### `/api/products` query parameters
 
@@ -392,8 +397,148 @@ Errors use:
 ```
 
 Status codes: `200` success, `400` invalid input, `404` missing product/route,
-`405` unsupported method, `500` generic server error. Internal SQL errors and
-stack traces are logged server-side and never returned to the browser.
+`405` unsupported method, `422` invalid cart payload, `500` generic server
+error. Internal SQL errors and stack traces are logged server-side and never
+returned to the browser.
+
+### `POST /api/cart/validate`
+
+The guest cart lives in the browser, which means the browser could send stale or
+tampered values. This endpoint therefore re-reads every product and variant from
+PostgreSQL and returns the authoritative name, image, effective price (sale
+price when valid), stock and a server-calculated summary. It never persists the
+cart and never trusts a price, total or stock value from the client.
+
+Request:
+
+```json
+{
+  "items": [
+    { "product_id": "uuid", "variant_id": "uuid-or-null", "quantity": 2 }
+  ]
+}
+```
+
+- At most 50 line items; quantities are integers 1–999.
+- Duplicate product/variant lines are merged.
+- `variant_id` is required when the product has variants and is ignored/cleared
+  for products without variants.
+- Products must exist and be active.
+
+Response (`data.items[]` plus `data.summary`):
+
+```json
+{
+  "success": true,
+  "data": {
+    "items": [
+      {
+        "product_id": "uuid",
+        "variant_id": "uuid",
+        "requested_quantity": 2,
+        "quantity": 2,
+        "unit_price": 50,
+        "line_total": 100,
+        "currency": "USD",
+        "product": {
+          "id": "uuid",
+          "name": "Product Printed T-shirt by HRX",
+          "slug": "product-printed-t-shirt-by-hrx",
+          "image": { "url": "/assets/images/...", "alt": "..." }
+        },
+        "size": "Medium",
+        "color": null,
+        "stock_quantity": 18,
+        "in_stock": true,
+        "available": true,
+        "within_stock": true,
+        "adjusted": false,
+        "reason": null
+      }
+    ],
+    "summary": {
+      "item_count": 2,
+      "line_count": 1,
+      "currency": "USD",
+      "subtotal": 100,
+      "shipping": null,
+      "tax": null,
+      "total": 100
+    }
+  },
+  "meta": { "count": 1 }
+}
+```
+
+`available: false` reasons are `unavailable`, `variant_required`,
+`variant_unavailable` and `out_of_stock`. When `quantity` exceeds stock the
+response keeps `available: true`, sets `within_stock: false`, clamps `quantity`
+to the available stock and sets `reason: "insufficient_stock"`. The storefront
+uses these flags to block the change and show a validation message.
+
+## Shopping cart
+
+RedStore ships with a complete guest shopping cart:
+
+- Add To Cart works on the product details page, including size/colour variant
+  selection, quantity selection and stock validation.
+- The header cart badge shows total units (not distinct rows) on every page.
+- `pages/cart.html` loads real cart data with quantity controls (buttons and
+  direct entry), remove, clear, empty state and an accurate subtotal.
+- Prices, names, images and stock always come from PostgreSQL through the PHP
+  API, including sale prices. Nothing authoritative is read from the browser.
+- Adding the same product and variant twice increases the existing line instead
+  of creating a duplicate.
+- The Add To Cart button is disabled while a request is running and when the
+  product/variant is out of stock or no size is selected.
+- Unavailable products are removed and quantities above current stock are
+  clamped when the cart is opened; a notification explains what changed.
+
+### Guest cart persistence
+
+Guests do not need an account. The cart is stored in `localStorage` under
+`redstore_cart_v1` as IDs and quantities only:
+
+```json
+{
+  "version": 1,
+  "items": [
+    { "productId": "uuid", "variantId": "uuid-or-null", "quantity": 2 }
+  ]
+}
+```
+
+It survives refreshes, navigation between storefront pages, browser restarts
+and new sessions in the same browser profile. Invalid JSON, unknown UUIDs,
+negative/zero quantities, duplicate lines and unavailable products are handled
+safely. If `localStorage` is unavailable (private mode or quota), the cart keeps
+working in memory for the current page session.
+
+### Authenticated carts
+
+Database-backed carts are **not enabled yet**. The account page is currently a
+login/register UI only; there is no real customer authentication endpoint in the
+PHP API (`Auth.php` is the admin session implementation and rejects
+non-admin roles). Rather than create a fake login, the cart is fully functional
+for guests.
+
+The schema already supports saved carts, so no migration is required to enable
+them later:
+
+1. Implement customer registration, login, logout and session identity in PHP
+   (separate from the admin session; validate the password hash server-side and
+   never accept a user ID from the browser).
+2. Add authenticated routes such as `GET /api/cart`, `POST /api/cart/items`,
+   `PATCH /api/cart/items/{id}`, `DELETE /api/cart/items/{id}` and
+   `DELETE /api/cart`, all scoped to the session user.
+3. Read/write the existing `cart_items` table
+   (`user_id`, `product_id`, `variant_id`, `quantity`). Re-use the existing
+   unique constraint for user/product/variant and validate every change against
+   `products` / `product_variants`.
+4. After login, validate the guest `localStorage` cart, merge it into
+   `cart_items` without creating duplicate product/variant lines or exceeding
+   stock, then clear the guest copy.
+5. Validate stock again at checkout; a cart item does not reserve inventory.
 
 ## Admin dashboard
 
@@ -463,9 +608,11 @@ changes.
 - `pages/products.html` supports category filtering, search, sorting,
   pagination and shareable URL state (`?category=...&search=...&sort=...&page=...`).
 - `pages/product-details.html?slug=<slug>` renders any active product, including
-  gallery images, variants, stock, description and related products.
-- Product cards and detail content are inserted with DOM `textContent` and
-  attributes rather than raw HTML, so database text cannot inject markup.
+  gallery images, variants, stock, description, Add To Cart and related products.
+- `pages/cart.html` renders the real guest cart with quantity controls, remove,
+  clear, empty state and a server-validated subtotal.
+- Product cards, cart rows and detail content are inserted with DOM `textContent`
+  and attributes rather than raw HTML, so database text cannot inject markup.
 - Products without a usable image fall back to
   `assets/images/products/placeholder.svg`.
 - The original hard-coded star ratings on product cards were removed because the
@@ -519,6 +666,19 @@ changes.
    browser and check the developer console for errors. Sign in at `/admin/login`
    and verify product, category, inventory, order and customer pages.
 
+   Cart smoke test (no extra environment variables are needed):
+
+   ```bash
+   curl -sS -X POST https://YOUR-SERVICE.onrender.com/api/cart/validate \
+     -H 'Content-Type: application/json' \
+     -d '{"items":[{"product_id":"<product-uuid>","variant_id":null,"quantity":1}]}'
+   ```
+
+   Then in the browser: open a product, select a size if required, add it,
+   confirm the header badge updates, open `/pages/cart.html`, change quantities,
+   remove an item and refresh the page. The guest cart should persist. Test that
+   adding more than the available stock is rejected.
+
 Render free-tier services can sleep after inactivity and have usage limits.
 The first request after sleep may be slow.
 
@@ -528,6 +688,9 @@ The first request after sleep may be slow.
 - Sort keys and limits are allowlisted/validated; user input is never
   interpolated into SQL.
 - Only active products are returned from public endpoints.
+- Guest cart storage contains only product IDs, variant IDs and quantities;
+  names, prices and stock are re-read from PostgreSQL for every cart render and
+  change. Client-supplied totals are never trusted.
 - Database credentials and service-role keys are server-side environment
   variables only.
 - `.env` and dotfiles are excluded from Git and denied by Apache and the local
@@ -548,12 +711,14 @@ The first request after sleep may be slow.
 
 ## Out of scope in this phase
 
-- Cart persistence, checkout and order placement.
+- Database-backed carts for authenticated customers (guest carts are complete).
+- Checkout and order placement.
 - Payment integration.
 - Per-change order status history (the schema has no history table).
 - Editing static site content (About Us, branding, layout, CSS) from the admin
   dashboard.
 
 The schema includes tables for carts, orders and order items; admin order and
-customer views work against existing data even though the public storefront does
-not yet offer checkout.
+customer views work against existing data. The guest storefront cart is fully
+functional, but saved carts for authenticated customers and checkout are not yet
+implemented.

@@ -35,18 +35,26 @@
     return url.toString();
   };
 
-  const request = async (path, params = {}) => {
+  const execute = async (path, { method = 'GET', params = {}, body = null } = {}) => {
     const controller = new AbortController();
     const timer = window.setTimeout(() => controller.abort(), 15000);
 
+    const headers = { Accept: 'application/json' };
+    const options = {
+      method,
+      headers,
+      credentials: 'same-origin',
+      signal: controller.signal,
+    };
+
+    if (body !== null && body !== undefined) {
+      headers['Content-Type'] = 'application/json';
+      options.body = JSON.stringify(body);
+    }
+
     let response;
     try {
-      response = await fetch(buildUrl(path, params), {
-        method: 'GET',
-        headers: { Accept: 'application/json' },
-        credentials: 'same-origin',
-        signal: controller.signal,
-      });
+      response = await fetch(buildUrl(path, params), options);
     } catch (error) {
       if (error?.name === 'AbortError') {
         throw new ApiError('The request timed out. Please try again.', 0, 'timeout');
@@ -78,6 +86,10 @@
       meta: payload.meta || null,
     };
   };
+
+  const request = (path, params = {}) => execute(path, { params });
+  const validateCart = (items) =>
+    execute('/cart/validate', { method: 'POST', body: { items: Array.isArray(items) ? items : [] } });
 
   const getProducts = (params = {}) => request('/products', params);
   const getFeaturedProducts = (params = {}) => request('/products/featured', params);
@@ -122,5 +134,6 @@
     getFeaturedProducts,
     getLatestProducts,
     getCategories,
+    validateCart,
   };
 })();
