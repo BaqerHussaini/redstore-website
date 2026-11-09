@@ -147,6 +147,8 @@
   const clearCart = () => execute('/cart', { method: 'DELETE' });
   const mergeCart = (items) =>
     execute('/cart/merge', { method: 'POST', body: { items: Array.isArray(items) ? items : [] } });
+  const placeOrder = (details) =>
+    execute('/orders', { method: 'POST', body: details && typeof details === 'object' ? details : {} });
 
   const getProducts = (params = {}) => request('/products', params);
   const getFeaturedProducts = (params = {}) => request('/products/featured', params);
@@ -202,5 +204,6 @@
     removeCartItem,
     clearCart,
     mergeCart,
+    placeOrder,
   };
 })();

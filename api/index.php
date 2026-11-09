@@ -94,6 +94,8 @@ try {
         $router = require __DIR__ . '/routes/auth.php';
     } elseif (str_starts_with($path, '/cart')) {
         $router = require __DIR__ . '/routes/cart.php';
+    } elseif (str_starts_with($path, '/orders')) {
+        $router = require __DIR__ . '/routes/orders.php';
     } else {
         $router = require __DIR__ . '/routes/products.php';
     }

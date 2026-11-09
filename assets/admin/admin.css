@@ -403,6 +403,7 @@ code {
 
 /* ---------- Panels ---------- */
 .admin-panel {
+  min-width: 0;
   margin-bottom: 1.25rem;
   padding: clamp(1rem, 2vw, 1.4rem);
   border: 1px solid var(--admin-line);
@@ -445,6 +446,14 @@ code {
 .admin-split {
   display: grid;
   gap: 1.25rem;
+}
+
+.admin-split > * {
+  min-width: 0;
+}
+
+.admin-split--aside > .admin-panel:first-child .admin-form {
+  max-width: 560px;
 }
 
 .admin-split--aside {
@@ -554,6 +563,10 @@ code {
   vertical-align: middle;
 }
 
+.admin-table td {
+  white-space: normal;
+}
+
 .admin-table th {
   background: #f8fafc;
   color: var(--admin-muted);
@@ -588,6 +601,18 @@ code {
   min-width: 130px;
 }
 
+.admin-table--categories .admin-row-actions form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.admin-table--categories .admin-row-actions select {
+  width: 150px;
+  min-width: 0;
+}
+
 .admin-table--inventory {
   white-space: normal;
 }
@@ -612,6 +637,7 @@ code {
   display: flex;
   align-items: center;
   gap: 0.65rem;
+  min-width: 180px;
 }
 
 .admin-product-cell img {
@@ -622,8 +648,19 @@ code {
   background: #eef1f5;
 }
 
+.admin-product-cell > div {
+  min-width: 0;
+}
+
+.admin-product-cell .admin-table__primary,
+.admin-product-cell .admin-table__secondary {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
 .admin-row-actions {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.4rem;
 }
@@ -891,6 +928,7 @@ code {
 
 .admin-inline-form {
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.35rem;
   max-width: 100%;
@@ -949,6 +987,7 @@ code {
 .admin-stock-list div {
   flex: 1;
   min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 /* ---------- Images ---------- */
@@ -1125,7 +1164,9 @@ code {
 }
 
 .admin-login__brand {
-  display: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   padding: clamp(2rem, 6vw, 5rem);
   background:
     radial-gradient(circle at 15% 15%, rgb(255 82 59 / 0.28), transparent 42%),
@@ -1233,19 +1274,48 @@ code {
   }
 
   .admin-split--aside {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 1500px) {
+  .admin-split--aside {
     grid-template-columns: minmax(260px, 0.7fr) 1.8fr;
+  }
+}
+
+
+@media (max-width: 979px) {
+  .admin-login {
+    grid-template-rows: auto 1fr;
+  }
+
+  .admin-login__panel {
+    place-items: start center;
+    padding: 1.5rem 1.25rem 2.5rem;
+  }
+
+  .admin-login__brand {
+    padding: clamp(1.5rem, 6vw, 2.5rem);
+  }
+
+  .admin-login__brand img {
+    width: 120px;
+    margin-bottom: 1rem;
+  }
+
+  .admin-login__brand p {
+    font-size: 0.95rem;
+  }
+
+  .admin-login__brand ul {
+    margin-top: 1rem;
   }
 }
 
 @media (min-width: 980px) {
   .admin-login {
     grid-template-columns: 1.05fr 1fr;
-  }
-
-  .admin-login__brand {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
   }
 }
 
@@ -1318,5 +1388,152 @@ code {
 
   .admin-row-actions {
     flex-wrap: wrap;
+  }
+}
+
+@media (min-width: 1360px) {
+  .admin-row-actions {
+    flex-wrap: nowrap;
+  }
+}
+
+/* ---------- Mobile/tablet cards for data tables ---------- */
+@media (max-width: 1199px) {
+  .admin-tables-ready .admin-table-wrap {
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .admin-tables-ready .admin-table,
+  .admin-tables-ready .admin-table tbody,
+  .admin-tables-ready .admin-table tr,
+  .admin-tables-ready .admin-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .admin-tables-ready .admin-table {
+    white-space: normal;
+    font-size: 0.84rem;
+  }
+
+  .admin-tables-ready .admin-table thead {
+    display: none;
+  }
+
+  .admin-tables-ready .admin-table tbody {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .admin-tables-ready .admin-table tbody tr {
+    padding: 0.35rem 0.85rem;
+    border: 1px solid var(--admin-line);
+    border-radius: var(--admin-radius-sm);
+    background: #fff;
+  }
+
+  .admin-tables-ready .admin-table tbody tr:hover {
+    background: #fff;
+  }
+
+  .admin-tables-ready .admin-table td {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.35rem 0.75rem;
+    padding: 0.55rem 0;
+    border-bottom: 1px solid var(--admin-line);
+    text-align: left;
+    white-space: normal;
+  }
+
+  .admin-tables-ready .admin-table tbody tr td:last-child {
+    border-bottom: 0;
+  }
+
+  .admin-tables-ready .admin-table td[data-label]::before {
+    content: attr(data-label);
+    flex: 0 1 42%;
+    min-width: 90px;
+    color: var(--admin-muted);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .admin-tables-ready .admin-table td > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .admin-tables-ready .admin-table .admin-product-cell {
+    flex: 1 1 100%;
+  }
+
+  .admin-tables-ready .admin-table .admin-row-actions {
+    flex: 1 1 auto;
+    justify-content: flex-end;
+  }
+
+  .admin-tables-ready .admin-table td > form,
+  .admin-tables-ready .admin-table td .admin-inline-form {
+    flex: 1 1 100%;
+  }
+
+  .admin-tables-ready .admin-table--variants td,
+  .admin-tables-ready .admin-table--categories td {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .admin-tables-ready .admin-table--variants td[data-label]::before,
+  .admin-tables-ready .admin-table--categories td[data-label]::before {
+    flex: none;
+    min-width: 0;
+  }
+
+  .admin-tables-ready .admin-table--variants td input,
+  .admin-tables-ready .admin-table--categories td input {
+    min-width: 0;
+  }
+
+  .admin-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-filters .admin-field,
+  .admin-filters .admin-field--grow {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+
+  .admin-filters .admin-filter-actions {
+    width: 100%;
+  }
+
+  .admin-inline-form {
+    display: flex;
+    width: 100%;
+  }
+
+  .admin-inline-form select,
+  .admin-inline-form input[type="number"] {
+    flex: 1 1 120px;
+    width: auto;
+    min-width: 0;
+  }
+
+  .admin-order-totals {
+    max-width: none;
+    margin-left: 0;
+  }
+
+  .admin-page-head__actions {
+    width: 100%;
   }
 }

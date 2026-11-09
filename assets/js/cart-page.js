@@ -14,6 +14,13 @@
   const subtotalCell = document.getElementById('cart-subtotal');
   const totalCell = document.getElementById('cart-total');
   const clearButton = document.getElementById('cart-clear');
+  const orderButton = document.getElementById('cart-order');
+  const orderDialog = document.getElementById('cart-order-dialog');
+  const orderForm = document.getElementById('cart-order-form');
+  const orderStatus = document.getElementById('cart-order-status');
+  const orderSubmit = document.getElementById('cart-order-submit');
+  const orderName = document.getElementById('order-full-name');
+  const orderEmail = document.getElementById('order-email');
 
   if (!cart || !helpers || !list || !content || !status || !empty) return;
 
@@ -54,16 +61,23 @@
     }
   };
 
+  const syncOrderButton = () => {
+    if (!orderButton) return;
+    orderButton.disabled = !current.items.some((item) => item.available);
+  };
+
   const showEmpty = () => {
     status.hidden = true;
     content.hidden = true;
     empty.hidden = false;
+    syncOrderButton();
   };
 
   const showContent = () => {
     status.hidden = true;
     empty.hidden = true;
     content.hidden = false;
+    syncOrderButton();
   };
 
   const summarize = (items, currency) => {
@@ -345,6 +359,101 @@
       loading = false;
     }
   };
+
+  const closeOrderDialog = () => {
+    if (orderDialog?.open) orderDialog.close();
+  };
+
+  const openOrderDialog = () => {
+    if (!orderDialog || !orderForm) return;
+
+    if (!current.items.some((item) => item.available)) {
+      cart.notify('Add available items to your cart before ordering.', 'error');
+      return;
+    }
+
+    if (!cart.isAuthenticated()) {
+      cart.notify('Please sign in to place your order.', 'info');
+      window.setTimeout(() => {
+        window.location.href = 'account.html';
+      }, 700);
+      return;
+    }
+
+    const user = cart.getUser();
+    if (orderName && user?.full_name) orderName.value = user.full_name;
+    if (orderEmail && user?.email) orderEmail.value = user.email;
+
+    if (orderStatus) {
+      orderStatus.hidden = true;
+      orderStatus.textContent = '';
+    }
+
+    if (typeof orderDialog.showModal === 'function') {
+      orderDialog.showModal();
+    } else {
+      orderDialog.setAttribute('open', '');
+    }
+  };
+
+  if (orderButton) {
+    orderButton.addEventListener('click', openOrderDialog);
+  }
+
+  if (orderDialog) {
+    document.getElementById('cart-order-close')?.addEventListener('click', closeOrderDialog);
+    document.getElementById('cart-order-cancel')?.addEventListener('click', closeOrderDialog);
+    orderDialog.addEventListener('click', (event) => {
+      if (event.target === orderDialog) closeOrderDialog();
+    });
+  }
+
+  if (orderForm) {
+    orderForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      if (!orderForm.reportValidity()) return;
+
+      if (!current.items.some((item) => item.available)) {
+        cart.notify('Your cart has no available items to order.', 'error');
+        return;
+      }
+
+      const payload = Object.fromEntries(new FormData(orderForm).entries());
+
+      if (orderSubmit) {
+        orderSubmit.disabled = true;
+        orderSubmit.textContent = 'Placing order…';
+      }
+      if (orderStatus) {
+        orderStatus.hidden = true;
+        orderStatus.textContent = '';
+      }
+
+      try {
+        const result = await window.RedStoreAPI.placeOrder(payload);
+        const order = result.data || {};
+        const number = order.order_number ? ` ${order.order_number}` : '';
+
+        closeOrderDialog();
+        orderForm.reset();
+        current = { items: [], summary: emptySummary() };
+        showEmpty();
+        cart.notify(`Order${number} placed successfully. Thank you for shopping with RedStore.`, 'success');
+        cart.refreshSession().catch(() => {});
+      } catch (error) {
+        if (orderStatus) {
+          orderStatus.hidden = false;
+          orderStatus.textContent = error?.message || 'We could not place your order. Please try again.';
+        }
+      } finally {
+        if (orderSubmit) {
+          orderSubmit.disabled = false;
+          orderSubmit.textContent = 'Place order';
+        }
+      }
+    });
+  }
 
   if (clearButton) {
     clearButton.addEventListener('click', async () => {

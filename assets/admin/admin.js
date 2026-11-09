@@ -256,6 +256,37 @@
     });
   };
 
+  const initResponsiveTables = () => {
+    const tables = document.querySelectorAll(".admin-table");
+
+    tables.forEach((table) => {
+      const headers = Array.from(table.querySelectorAll("thead th")).map((header) => {
+        const label = (header.textContent || "").replace(/\s+/g, " ").trim();
+        return label || "Details";
+      });
+
+      if (headers.length === 0) {
+        return;
+      }
+
+      table.querySelectorAll("tbody tr").forEach((row) => {
+        Array.from(row.children).forEach((cell, index) => {
+          if (cell.tagName !== "TD") {
+            return;
+          }
+          const label = headers[index] || "Details";
+          if (!cell.getAttribute("data-label")) {
+            cell.setAttribute("data-label", label);
+          }
+        });
+      });
+    });
+
+    if (tables.length > 0) {
+      document.body.classList.add("admin-tables-ready");
+    }
+  };
+
   const init = () => {
     initSidebar();
     initConfirmations();
@@ -263,6 +294,7 @@
     initVariants();
     initImagePreviews();
     initImageReorder();
+    initResponsiveTables();
   };
 
   if (document.readyState === "loading") {

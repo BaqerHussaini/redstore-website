@@ -112,10 +112,85 @@
             </table>
             <p class="cart-summary__note">Shipping and tax will be calculated during checkout.</p>
           </div>
+
+          <div class="cart-checkout">
+            <button class="btn cart-checkout__button" id="cart-order" type="button" disabled>Order selected items</button>
+          </div>
         </div>
       </div>
     </section>
   </main>
+
+  <dialog class="cart-order-dialog" id="cart-order-dialog" aria-labelledby="cart-order-title">
+    <form class="cart-order-form" id="cart-order-form" novalidate>
+      <div class="cart-order-form__head">
+        <div>
+          <h2 id="cart-order-title">Place your order</h2>
+          <p>Enter the delivery details for the items in your cart.</p>
+        </div>
+        <button class="cart-order-form__close" id="cart-order-close" type="button" aria-label="Close order form">&times;</button>
+      </div>
+
+      <div class="cart-order-form__grid">
+        <div class="cart-order-field cart-order-field--full">
+          <label for="order-full-name">Full name</label>
+          <input id="order-full-name" name="full_name" type="text" autocomplete="name" maxlength="120" required>
+        </div>
+
+        <div class="cart-order-field">
+          <label for="order-email">Email</label>
+          <input id="order-email" name="email" type="email" autocomplete="email" maxlength="255" required>
+        </div>
+
+        <div class="cart-order-field">
+          <label for="order-phone">Phone (optional)</label>
+          <input id="order-phone" name="phone" type="tel" autocomplete="tel" maxlength="30">
+        </div>
+
+        <div class="cart-order-field cart-order-field--full">
+          <label for="order-address1">Address line 1</label>
+          <input id="order-address1" name="address_line1" type="text" autocomplete="address-line1" maxlength="180" required>
+        </div>
+
+        <div class="cart-order-field cart-order-field--full">
+          <label for="order-address2">Address line 2 (optional)</label>
+          <input id="order-address2" name="address_line2" type="text" autocomplete="address-line2" maxlength="180">
+        </div>
+
+        <div class="cart-order-field">
+          <label for="order-city">City</label>
+          <input id="order-city" name="city" type="text" autocomplete="address-level2" maxlength="100" required>
+        </div>
+
+        <div class="cart-order-field">
+          <label for="order-state">State (optional)</label>
+          <input id="order-state" name="state" type="text" autocomplete="address-level1" maxlength="100">
+        </div>
+
+        <div class="cart-order-field">
+          <label for="order-postal">Postal code</label>
+          <input id="order-postal" name="postal_code" type="text" autocomplete="postal-code" maxlength="20" required>
+        </div>
+
+        <div class="cart-order-field">
+          <label for="order-country">Country</label>
+          <input id="order-country" name="country" type="text" autocomplete="country-name" maxlength="100" value="United States" required>
+        </div>
+
+        <div class="cart-order-field cart-order-field--full">
+          <label for="order-notes">Order notes (optional)</label>
+          <textarea id="order-notes" name="notes" rows="3" maxlength="2000"></textarea>
+        </div>
+      </div>
+
+      <p class="cart-order-form__status" id="cart-order-status" role="alert" hidden></p>
+
+      <div class="cart-order-form__actions">
+        <button class="btn cart-order-form__submit" id="cart-order-submit" type="submit">Place order</button>
+        <button class="cart-order-form__cancel" id="cart-order-cancel" type="button">Cancel</button>
+      </div>
+    </form>
+  </dialog>
 
   <!-- ---------- Footer ---------- -->
   <footer class="site-footer">

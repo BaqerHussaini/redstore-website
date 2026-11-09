@@ -6,9 +6,9 @@ PHP REST API backed by Supabase PostgreSQL. Product images can be served from
 the local `assets/images/` folder or from Supabase Storage.
 
 This phase implements the database, PHP API, dynamic product pages, guest and
-saved (database-backed) shopping carts, customer accounts, a secure
-server-rendered admin dashboard, and deployment configuration. Checkout and
-payment integration remain **out of scope**.
+saved (database-backed) shopping carts, customer accounts, customer order
+placement, a secure server-rendered admin dashboard, and deployment
+configuration. Payment integration remains **out of scope**.
 
 ## Architecture
 
@@ -335,6 +335,7 @@ Base URL: `/api`. All public endpoints return only active products.
 | `DELETE` | `/api/cart/items/{id}` | Remove a saved cart line (CSRF required) |
 | `DELETE` | `/api/cart` | Clear the saved cart (CSRF required) |
 | `POST` | `/api/cart/merge` | Merge a guest cart into the saved cart after login (CSRF required) |
+| `POST` | `/api/orders` | Place an order from the saved cart (CSRF required) |
 
 ### `/api/products` query parameters
 
@@ -410,10 +411,10 @@ Errors use:
 }
 ```
 
-Status codes: `200` success, `400` invalid input, `404` missing product/route,
-`405` unsupported method, `422` invalid cart payload, `500` generic server
-error. Internal SQL errors and stack traces are logged server-side and never
-returned to the browser.
+Status codes: `200` success, `201` created, `400` invalid input, `401`
+authentication required, `404` missing product/route, `405` unsupported method,
+`422` invalid cart/order payload, `500` generic server error. Internal SQL errors
+and stack traces are logged server-side and never returned to the browser.
 
 ### `POST /api/cart/validate`
 
@@ -553,8 +554,14 @@ session user id — the browser never supplies a user id.
 - After sign-out the saved cart remains in the database and is restored on the
   next login. A guest cart is used again while signed out.
 
+Signed-in customers can place an order from the cart page by entering their
+delivery details. `POST /api/orders` re-reads the saved cart, locks the affected
+product/variant rows, revalidates prices and stock in a transaction, snapshots
+the line items in `orders`/`order_items`, decrements inventory and clears the
+cart. The new order then appears in the admin dashboard.
+
 A cart item does not reserve inventory; stock must be validated again at
-checkout.
+order placement.
 
 ## Admin dashboard
 
@@ -735,14 +742,12 @@ The first request after sleep may be slow.
 
 ## Out of scope in this phase
 
-- Checkout and order placement.
 - Payment integration.
 - Password reset and transactional email delivery.
 - Per-change order status history (the schema has no history table).
 - Editing static site content (About Us, branding, layout, CSS) from the admin
   dashboard.
 
-The schema includes tables for carts, orders and order items; admin order and
-customer views work against existing data. The guest storefront cart is fully
-functional, but saved carts for authenticated customers and checkout are not yet
-implemented.
+The schema includes tables for carts, orders and order items. Guest and saved
+carts, customer accounts, order placement and the admin order/customer views are
+functional; online payment processing is not implemented.

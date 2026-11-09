@@ -42,7 +42,9 @@
 }
 
 .products-filters input {
-  min-width: min(220px, 100%);
+  width: clamp(160px, 18vw, 200px);
+  min-width: 0;
+  max-width: 100%;
 }
 
 .products-filters input:hover,
